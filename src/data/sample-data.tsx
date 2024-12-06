@@ -39,3 +39,7 @@ export const footerData:{
     ],
   },
 ];
+
+export const footerText = "고객센터 0000-0000 (평일 09:00~18:00/유료)|금융사고 전담 0000-1111 (24시간 연중무휴/유료)|서울특별시 서초구 XXXX 0X 00, 0층 (평일 09:00~18:00)|회사명 (주)|서울특별시 서초구 XXXX 000, 00층|대표 대표명|사업자등록번호 000-00-00000|가상자산사업자 등록번호 0000-00|기사 배열 책임자 이름|청소년 보호 책임자 이름";
+
+export const copyright = "Copyright © 2017 - 2024 Kyungsu Park. All rights reserved.";
