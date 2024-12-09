@@ -1,6 +1,7 @@
 import { Logo } from "@/components/icons";
 import Link from "next/link";
 import NavLink from "@/components/ui/nav-link";
+import AuthButton from "@/components/ui/auth-button";
 
 export default function Header() {
   return (
@@ -14,8 +15,7 @@ export default function Header() {
         <NavLink href="/investments">투자내역</NavLink>
       </div>
       <div className="grow flex flex-row gap-5 items-center justify-end text-sm text-white font-bold">
-        <Link href="/login">로그인</Link>
-        <Link href="/signup">회원가입</Link>
+        <AuthButton></AuthButton>
       </div>
     </header>
   );
