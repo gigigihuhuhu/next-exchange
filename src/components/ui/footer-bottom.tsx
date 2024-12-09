@@ -8,10 +8,9 @@ export default function FooterBottom() {
           return (
             <div
               key={index}
-              className="text-sm text-gray-700 font-medium flex flex-row py-2"
+              className="text-sm text-gray-700 font-medium flex flex-row py-2 after:content-['|'] after:mx-2 after:text-gray-200 last:after:content-none"
             >
               <p>{text}</p>
-              <span className="mx-2 text-gray-200">|</span>
             </div>
           );
         })}
