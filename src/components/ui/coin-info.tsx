@@ -8,17 +8,19 @@ import { SettingsIcon } from "@/components/icons";
 import MiniChart from "@/components/ui/lw-minichart";
 
 type CoinInfoProps = {
-  market: string;
+  marketCode: string;
+  koreanName: string;
+  englishName: string;
 };
 
-const CoinInfo = ({ market }: CoinInfoProps) => {
+const CoinInfo = ( market : CoinInfoProps) => {
   const [data, setData] = useState<Coin | null>(null);
   const [activeTab, setActiveTab] = useState<number>(0);
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch(
-        `https://api.upbit.com/v1/ticker?markets=${market}`
+        `https://api.upbit.com/v1/ticker?markets=${market.marketCode}`
       );
       const result = await res.json();
       setData(Coin.fromApiData(result[0]));
@@ -50,7 +52,7 @@ const CoinInfo = ({ market }: CoinInfoProps) => {
             height={26}
             priority
           ></Image>
-          <h2 className="ml-2 text-xl font-bold">{`${data.coinName("kr")}`}</h2>
+          <h2 className="ml-2 text-xl font-bold">{`${market.koreanName}`}</h2>
           <h3 className="ml-1 text-xs text-gray-500 font-medium">{`${data.coinCode()}/${data.currencyType()}`}</h3>
         </div>
 
