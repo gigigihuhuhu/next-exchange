@@ -1,16 +1,25 @@
+import { GetStaticProps } from "next";
+
 import LwWidget from "@/components/ui/lw-widget";
 import CoinInfo from "@/components/ui/coin-info";
+import Notice from "@/components/ui/notice";
 
-export default function Exchange() {
+export default async function Exchange({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const market: string = (await searchParams)?.market?.toString() || "KRW-BTC";
+
   return (
     <div className="bg-gray-200 grid grid-cols-3 gap-2 py-2">
       <div className="col-span-2 flex flex-col gap-2">
-        <div className="bg-white h-[50px]"></div>
+        <Notice className="bg-white"></Notice>
         <div>
           <div className="bg-white">
-            <CoinInfo></CoinInfo>
+            <CoinInfo market={market}></CoinInfo>
           </div>
-          <div className="bg-white h-[400px]">
+          <div className="bg-white h-[450px]">
             <LwWidget></LwWidget>
           </div>
         </div>

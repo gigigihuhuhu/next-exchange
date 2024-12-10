@@ -12,7 +12,7 @@ export default function Header() {
       </Link>
       <div className="grow flex flex-row gap-10 items-center justify-center text-slate-400 font-semibold">
         <NavLink
-          href={{ pathname: "/exchange", query: { code: defaultMarket } }}
+          href={{ pathname: "/exchange", query: { market: defaultMarket } }}
         >
           거래소
         </NavLink>

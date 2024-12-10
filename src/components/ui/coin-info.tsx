@@ -1,23 +1,24 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 
 import { Coin } from "@/model/coin";
 import { SettingsIcon } from "@/components/icons";
 import MiniChart from "@/components/ui/lw-minichart";
 
-const CoinInfo = () => {
-  const searchParams = useSearchParams();
+type CoinInfoProps = {
+  market: string;
+};
+
+const CoinInfo = ({ market }: CoinInfoProps) => {
   const [data, setData] = useState<Coin | null>(null);
   const [activeTab, setActiveTab] = useState<number>(0);
 
   useEffect(() => {
-    const code = searchParams.get("code") || "KRW-BTC";
     const fetchData = async () => {
       const res = await fetch(
-        `https://api.upbit.com/v1/ticker?markets=${code}`
+        `https://api.upbit.com/v1/ticker?markets=${market}`
       );
       const result = await res.json();
       setData(Coin.fromApiData(result[0]));
@@ -32,7 +33,7 @@ const CoinInfo = () => {
     }, interval);
 
     return () => clearInterval(fetchInterval);
-  }, [searchParams]);
+  }, [market]);
 
   if (!data) {
     return <div>Loading...</div>;
@@ -90,7 +91,13 @@ const CoinInfo = () => {
           }
         >
           <div className="grid grid-cols-4 py-4 px-5 justify-items-stretch gap-6">
-            <div className={"flex flex-col justify-center *:flex *:flex-row *:gap-2 *:items-end" + (data.change == 'FALL' ? ' text-green-600' : '')  + (data.change == 'RISE' ? ' text-red-600' : '')}>
+            <div
+              className={
+                "flex flex-col justify-center *:flex *:flex-row *:gap-2 *:items-end" +
+                (data.change == "FALL" ? " text-green-600" : "") +
+                (data.change == "RISE" ? " text-red-600" : "")
+              }
+            >
               <div>
                 <h1 className="text-3xl font-bold">
                   {data.tradePrice.toLocaleString()}
@@ -140,7 +147,11 @@ const CoinInfo = () => {
                   거래대금(24h)
                 </h3>
                 <div className="text-xs flex flex-row gap-1 items-center">
-                  <h3>{parseInt(data.accTradePrice24h.toFixed(0)).toLocaleString()}</h3>
+                  <h3>
+                    {parseInt(
+                      data.accTradePrice24h.toFixed(0)
+                    ).toLocaleString()}
+                  </h3>
                   <h4 className="text-gray-500">{data.currencyType()}</h4>
                 </div>
               </div>
