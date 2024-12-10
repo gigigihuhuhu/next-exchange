@@ -1,7 +1,7 @@
 import LwWidget from "@/components/ui/lw-widget";
 import CoinInfo from "@/components/ui/coin-info";
 
-export default function Home() {
+export default function Exchange() {
   return (
     <div className="bg-gray-200 grid grid-cols-3 gap-2 py-2">
       <div className="col-span-2 flex flex-col gap-2">
