@@ -1,4 +1,5 @@
 import LwWidget from "@/components/ui/lw-widget";
+import CoinInfo from "@/components/ui/coin-info";
 
 export default function Home() {
   return (
@@ -6,7 +7,9 @@ export default function Home() {
       <div className="col-span-2 flex flex-col gap-2">
         <div className="bg-white h-[50px]"></div>
         <div>
-          <div className="bg-white h-[50px]"></div>
+          <div className="bg-white">
+            <CoinInfo></CoinInfo>
+          </div>
           <div className="bg-white h-[400px]">
             <LwWidget></LwWidget>
           </div>
