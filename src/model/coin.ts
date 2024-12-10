@@ -1,5 +1,34 @@
 import { coinCodeToNameMapper } from "@/data/sample-data";
 
+interface CoinDTO {
+  market: string;
+  trade_date: string;
+  trade_time: string;
+  trade_date_kst: string;
+  trade_time_kst: string;
+  trade_timestamp: number;
+  opening_price: number;
+  high_price: number;
+  low_price: number;
+  trade_price: number;
+  prev_closing_price: number;
+  change: string;
+  change_price: number;
+  change_rate: number;
+  signed_change_price: number;
+  signed_change_rate: number;
+  trade_volume: number;
+  acc_trade_price: number;
+  acc_trade_price_24h: number;
+  acc_trade_volume: number;
+  acc_trade_volume_24h: number;
+  highest_52_week_price: number;
+  highest_52_week_date: string;
+  lowest_52_week_price: number;
+  lowest_52_week_date: string;
+  timestamp: number;
+}
+
 export class Coin {
   market: string;
   tradeDate: string;
@@ -28,7 +57,7 @@ export class Coin {
   lowest52WeekDate: string;
   timestamp: number;
 
-  constructor(data: any) {
+  constructor(data: CoinDTO) {
     this.market = data.market;
     this.tradeDate = data.trade_date;
     this.tradeTime = data.trade_time;
@@ -70,7 +99,7 @@ export class Coin {
     return coinCodeToNameMapper[coinCode][locale as "en" | "kr"];
   }
 
-  static fromApiData(data: any): Coin {
+  static fromApiData(data: CoinDTO): Coin {
     return new Coin(data);
   }
 }
