@@ -122,3 +122,22 @@ export function NoticeIcon() {
     </div>
   );
 }
+
+export function FavoriteIcon() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M9.613 11.797L5.899 9.746L2.184 11.797L2.893 7.455L0 4.389L4.038 3.757L5.899 0L7.759 3.757L11.899 4.389L9.3 7.455L9.613 11.797Z"
+        fill="#DDDDDD"
+      />
+    </svg>
+  );
+}

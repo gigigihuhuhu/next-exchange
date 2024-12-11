@@ -102,6 +102,10 @@ export class Coin {
     const coinCode = this.coinCode();
     return coinCodeToNameMapper[coinCode][locale as "en" | "kr"];
   }
+
+  static getDefaultCoin() {
+    return new Coin('-','-','-','-','-',0,0,0,0,0,0,'-',0,0,0,0,0,0,0,0,0,0,'-',0,'-',0)
+  }
 }
 
 export class Coins {

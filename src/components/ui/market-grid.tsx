@@ -31,16 +31,16 @@ export function MarketGrid({ markets }: { markets: string }) {
           );
         })}
       </div>
-      <div className="relative">
+      <div className="relative w-full *:w-full">
         {currencyTypes.map((currencyType, index) => {
           return (
             <div
+              key={index}
               className={
                 "absolute " + (activeCurrencyIdx === index ? "block" : "hidden")
               }
             >
               <MarketGridCoins
-                key={index}
                 markets={markets}
                 currencyTypeCode={currencyType.codeName}
               ></MarketGridCoins>

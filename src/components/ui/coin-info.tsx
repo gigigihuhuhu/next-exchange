@@ -14,10 +14,12 @@ const CoinInfo = ({ market }: { market: string }) => {
   const [marketInstance, setMarketInstance] = useState<Market>(Market.getDefaultMarket());
 
   useEffect(() => {
-    setMarketInstance(Market.fromObject(JSON.parse(market)));
+    const parsedMarket = Market.fromObject(JSON.parse(market));
+    setMarketInstance(parsedMarket);
+
     const fetchData = async () => {
       const res = await fetch(
-        `https://api.upbit.com/v1/ticker?markets=${marketInstance.marketCode}`
+        `https://api.upbit.com/v1/ticker?markets=${parsedMarket.marketCode}`
       );
       const result = await res.json();
       setData(Coin.fromDTO(result[0]));
@@ -93,7 +95,7 @@ const CoinInfo = ({ market }: { market: string }) => {
             <div
               className={
                 "flex flex-col justify-center *:flex *:flex-row *:gap-2 *:items-end" +
-                (data.change == "FALL" ? " text-green-600" : "") +
+                (data.change == "FALL" ? " text-green-700" : "") +
                 (data.change == "RISE" ? " text-red-600" : "")
               }
             >
@@ -124,7 +126,7 @@ const CoinInfo = ({ market }: { market: string }) => {
               <hr className="my-2" />
               <div>
                 <h3 className="text-xs text-gray-700">저가</h3>
-                <h3 className="font-semibold text-sm text-green-600">
+                <h3 className="font-semibold text-sm text-green-700">
                   {data.lowPrice.toLocaleString()}
                 </h3>
               </div>
