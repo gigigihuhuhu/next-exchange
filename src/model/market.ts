@@ -21,6 +21,10 @@ export class Market {
   static getDefaultMarket() {
     return new Market("KRW-BTC", "비트코인", "Bitcoin");
   }
+
+  currencyType() {
+    return this.marketCode.split("-")[0];
+  }
 }
 
 export class Markets {
@@ -30,7 +34,15 @@ export class Markets {
     return new Markets(data.map((marketDTO) => Market.fromDTO(marketDTO)));
   }
 
+  static fromObject(data: Array<Market>) {
+    return new Markets(data.map((marketObject) => Market.fromObject(marketObject)));
+  }
+
   findMarket(marketCode: string) {
-    return this.markets.find((a) => a.marketCode == marketCode);
+    return this.markets.find((a) => a.marketCode === marketCode);
+  }
+
+  findMarketByCurrencyType(currencyType : string) {
+    return this.markets.filter((a) => a.currencyType() === currencyType);
   }
 }
