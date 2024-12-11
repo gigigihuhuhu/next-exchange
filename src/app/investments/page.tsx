@@ -11,7 +11,7 @@ export default function Investments() {
     } else {
       redirect("/");
     }
-    return "Redirecting to login...";
+    return (<></>);
   } else {
     return (
       <>

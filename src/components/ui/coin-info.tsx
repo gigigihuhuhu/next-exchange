@@ -37,7 +37,7 @@ const CoinInfo = ({ market }: { market: string }) => {
   }, [market]);
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   return (

@@ -11,7 +11,7 @@ export default function Balances() {
     } else {
       redirect("/");
     }
-    return "Redirecting to login...";
+    return (<></>);
   } else {
     return (
       <>
