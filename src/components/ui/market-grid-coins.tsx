@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { Market, Markets } from "@/model/market";
 import { Coin, Coins } from "@/model/coin";
 import { FavoriteIcon } from "../icons";
-import MarketGridLink from "./market-grid-link";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export function MarketGridCoins({
   markets,
@@ -14,6 +15,7 @@ export function MarketGridCoins({
   currencyTypeCode: string;
 }) {
   const [coins, setCoins] = useState<Coins | null>(null);
+  const [currMarket] = useState<string | null>(useSearchParams().get("market"));
   const allMarkets = Markets.fromObject(JSON.parse(markets).markets);
 
   useEffect(() => {
@@ -44,11 +46,13 @@ export function MarketGridCoins({
           const coin: Coin =
             coins?.findCoin(market.marketCode) ?? Coin.getDefaultCoin();
           return (
-            <MarketGridLink
-              key={index}
-              href={`/exchange?market=${market.marketCode}`}
-            >
-              <div className="flex flex-row items-center px-3 border-t h-[45px] hover:bg-gray-100 w-full">
+            <Link key={index} href={`/exchange?market=${market.marketCode}`}>
+              <div
+                className={
+                  "flex flex-row items-center px-3 border-t h-[45px] hover:bg-gray-100 w-full " +
+                  (currMarket === market.marketCode ? " bg-gray-100" : "")
+                }
+              >
                 <div className="flex flex-row items-center justify-start gap-2 basis-[30px]">
                   <div>
                     <FavoriteIcon></FavoriteIcon>
@@ -67,7 +71,9 @@ export function MarketGridCoins({
                   </div>
                 </div>
                 <div className="text-left basis-[98px]">
-                  <h3 className="text-[0.75rem] leading-[0.9rem] font-semibold">{market.koreanName}</h3>
+                  <h3 className="text-[0.75rem] leading-[0.9rem] font-semibold">
+                    {market.koreanName}
+                  </h3>
                   <h3 className="text-[0.65rem] leading-[0.9rem] text-gray-500">
                     {market.marketCode}
                   </h3>
@@ -106,7 +112,7 @@ export function MarketGridCoins({
                   <h4 className="text-gray-500">백만</h4>
                 </div>
               </div>
-            </MarketGridLink>
+            </Link>
           );
         })}
     </>

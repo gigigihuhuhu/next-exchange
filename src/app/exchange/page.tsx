@@ -34,7 +34,7 @@ export default async function Exchange({
 
   return (
     <div className="bg-gray-200 p-2 flex flex-row gap-2">
-      <div className="col-span-2 flex flex-col gap-2 flex-grow">
+      <div className="flex flex-col gap-2 flex-grow">
         <Notice className="bg-white"></Notice>
         <div>
           <div className="bg-white">
@@ -45,7 +45,7 @@ export default async function Exchange({
           </div>
         </div>
       </div>
-      <div className="bg-white col-span-1 min-w-[400px] max-w-[400px] overflow-y-scroll">
+      <div className="min-w-[400px] max-w-[400px] overflow-y-scroll bg-white">
         <MarketGrid markets={JSON.stringify(allMarkets)}></MarketGrid>
       </div>
     </div>
