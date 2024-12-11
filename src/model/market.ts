@@ -25,6 +25,10 @@ export class Market {
   currencyType() {
     return this.marketCode.split("-")[0];
   }
+
+  coinCode() {
+    return this.marketCode.split("-")[1];
+  }
 }
 
 export class Markets {

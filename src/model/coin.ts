@@ -59,7 +59,7 @@ export class Coin {
     public timestamp: number
   ) {}
 
-  static fromApiData(data: CoinDTO): Coin {
+  static fromDTO(data: CoinDTO): Coin {
     return new Coin(
       data.market,
       data.trade_date,
@@ -101,5 +101,19 @@ export class Coin {
   coinName(locale: string) {
     const coinCode = this.coinCode();
     return coinCodeToNameMapper[coinCode][locale as "en" | "kr"];
+  }
+}
+
+export class Coins {
+  constructor(private coins: { [market : string] : Coin ;}) {}
+
+  static fromDTO(data: Array<CoinDTO>) {
+    const newCoins: { [market : string] : Coin ;} = {}
+    data.forEach((coinDTO) => { newCoins[coinDTO.market] = Coin.fromDTO(coinDTO); });
+    return new Coins(newCoins);
+  }
+
+  findCoin(marketCode: string) {
+    return this.coins[marketCode];
   }
 }
