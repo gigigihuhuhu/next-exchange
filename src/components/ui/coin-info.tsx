@@ -4,23 +4,20 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 import { Coin } from "@/model/coin";
+import { Market } from "@/model/market";
 import { SettingsIcon } from "@/components/icons";
 import MiniChart from "@/components/ui/lw-minichart";
 
-type CoinInfoProps = {
-  marketCode: string;
-  koreanName: string;
-  englishName: string;
-};
-
-const CoinInfo = ( market : CoinInfoProps) => {
+const CoinInfo = ({ market }: { market: string }) => {
   const [data, setData] = useState<Coin | null>(null);
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [marketInstance, setMarketInstance] = useState<Market>(Market.getDefaultMarket());
 
   useEffect(() => {
+    setMarketInstance(Market.fromObject(JSON.parse(market)));
     const fetchData = async () => {
       const res = await fetch(
-        `https://api.upbit.com/v1/ticker?markets=${market.marketCode}`
+        `https://api.upbit.com/v1/ticker?markets=${marketInstance.marketCode}`
       );
       const result = await res.json();
       setData(Coin.fromApiData(result[0]));
@@ -52,7 +49,7 @@ const CoinInfo = ( market : CoinInfoProps) => {
             height={26}
             priority
           ></Image>
-          <h2 className="ml-2 text-xl font-bold">{`${market.koreanName}`}</h2>
+          <h2 className="ml-2 text-xl font-bold">{`${marketInstance.koreanName}`}</h2>
           <h3 className="ml-1 text-xs text-gray-500 font-medium">{`${data.coinCode()}/${data.currencyType()}`}</h3>
         </div>
 
@@ -61,7 +58,7 @@ const CoinInfo = ( market : CoinInfoProps) => {
             className={
               activeTab === 0
                 ? "text-blue-600 border-b-4 border-blue-600"
-                : "hover:border-b-4 hover:border-gray-400"
+                : "hover:border-b-4 hover:border-gray-400 hover:text-gray-800"
             }
             onClick={() => setActiveTab(0)}
           >
