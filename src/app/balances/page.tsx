@@ -1,16 +1,22 @@
 "use client";
 
 import { useAuth } from "@/context/auth-context";
+import { redirect } from "next/navigation";
 
 export default function Balances() {
-  const { authenticated, login } = useAuth();
-  if(!authenticated){
-    login();
-    return "redirecting...";
+  const { keycloak } = useAuth();
+  if (!keycloak.authenticated) {
+    if (keycloak.didInitialize) {
+      keycloak.login();
+    } else {
+      redirect("/");
+    }
+    return "Redirecting to login...";
+  } else {
+    return (
+      <>
+        <h1>Balances</h1>
+      </>
+    );
   }
-  return (
-    <>
-      <h1>Balances</h1>
-    </>
-  );
 }

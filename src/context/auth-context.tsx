@@ -1,14 +1,7 @@
 "use client";
 
-import keycloak from "@/utils/keycloak";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useRef,
-  useState,
-  useEffect,
-} from "react";
+import Keycloak from "keycloak-js";
+import { createContext, useContext, useState, useEffect } from "react";
 
 type User = {
   name: string;
@@ -19,9 +12,7 @@ interface AuthContextProps {
   authenticated: boolean | null;
   token: string | null;
   user: User | null;
-  login: () => void;
-  logout: () => void;
-  register: () => void;
+  keycloak: Keycloak;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -32,12 +23,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
   const [authenticated, setAuth] = useState<boolean | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const isRun = useRef<boolean>(false);
+  const [keycloak] = useState<Keycloak>(
+    new Keycloak({
+      url: process.env.NEXT_PUBLIC_KEYCLOAK_URL || "",
+      realm: process.env.NEXT_PUBLIC_KEYCLOAK_REALM || "",
+      clientId: process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT || "",
+    })
+  );
 
   const init = async () => {
-    if (isRun.current) return;
-    isRun.current = true;
-    keycloak
+    return keycloak
       .init({
         onLoad: "check-sso",
         silentCheckSsoRedirectUri: `${location.origin}/silent-check-sso.html`,
@@ -55,50 +50,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       })
       .catch((error) => {
         console.error("Keycloak initialization failed:", error);
-      })
-      .finally(() => {
-        isRun.current = false;
       });
   };
-
-  const login = useCallback(async () => {
-    if (isRun.current) return;
-    isRun.current = true;
-    keycloak
-      .login()
-      .catch((error) => {
-        console.error("Keycloak login failed:", error);
-      })
-      .finally(() => {
-        isRun.current = false;
-      });
-  }, []);
-
-  const logout = useCallback(async () => {
-    if (isRun.current) return;
-    isRun.current = true;
-    keycloak
-      .logout()
-      .catch((error) => {
-        console.error("Keycloak logout failed:", error);
-      })
-      .finally(() => {
-        isRun.current = false;
-      });
-  }, []);
-
-  const register = useCallback(async () => {
-    if (isRun.current) return;
-    isRun.current = true;
-    keycloak
-      .register()
-      .catch((error) => {
-        console.error("Keycloak register failed:", error);
-      })
-      .finally(() => {
-        isRun.current = false;
-      });
-  }, []);
 
   useEffect(() => {
     init();
@@ -107,12 +60,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <AuthContext.Provider
       value={{
-        authenticated: authenticated,
+        authenticated,
         user,
         token,
-        login,
-        logout,
-        register,
+        keycloak,
       }}
     >
       {children}
