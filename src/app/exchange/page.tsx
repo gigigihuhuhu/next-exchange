@@ -35,12 +35,12 @@ export default async function Exchange({
   return (
     <div className="p-2 flex flex-row gap-2">
       <div className="min-w-[900px] flex flex-col gap-2 flex-grow">
-        <Notice className="bg-white"></Notice>
+        <Notice className="bg-white h-[32px]"></Notice>
         <div>
-          <div className="bg-white">
+          <div className="bg-white h-[138px]">
             <CoinInfo market={JSON.stringify(coinInfoMarket)}></CoinInfo>
           </div>
-          <div className="bg-white h-[450px]">
+          <div className="bg-white h-[calc(100vh-218px)]">
             <LwWidget></LwWidget>
           </div>
         </div>

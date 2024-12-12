@@ -93,7 +93,7 @@ const CoinInfo = ({ market }: { market: string }) => {
   }
 
   return (
-    <div className="h-[138px]">
+    <>
       <div className="px-4 flex flex-row items-center justify-between border-b border-solid border-gray-200">
         <div className="flex flex-row items-center grow">
           <Image
@@ -221,7 +221,7 @@ const CoinInfo = ({ market }: { market: string }) => {
           <p>not yet implemented</p>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
