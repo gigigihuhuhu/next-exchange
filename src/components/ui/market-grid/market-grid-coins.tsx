@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { UpbitWsReqForm, useUpbitWebSocket } from "@/hooks/useUpbitWebSocket";
 import { v4 as uuidv4 } from "uuid";
+import MarketGridTradePrice from "./market-grid-trade-price";
 
 export function MarketGridCoins({
   markets,
@@ -48,15 +49,13 @@ export function MarketGridCoins({
 
   const onmsgHandler = (event: MessageEvent) => {
     try {
-      event.data
-        .text()
-        .then((data: string) => {
-          const newCoin: Coin | undefined = Coin.fromWsDTO(JSON.parse(data));
-          setCoins((prevCoins) => {
-            if (!prevCoins) return prevCoins;
-            return prevCoins.updateCoin(newCoin);
-          });
+      event.data.text().then((data: string) => {
+        const newCoin: Coin | undefined = Coin.fromWsDTO(JSON.parse(data));
+        setCoins((prevCoins) => {
+          if (!prevCoins) return prevCoins;
+          return prevCoins.updateCoin(newCoin);
         });
+      });
     } catch (error) {
       console.error("Error during data parse:", error);
     }
@@ -107,17 +106,10 @@ export function MarketGridCoins({
                     {market.marketCode}
                   </h3>
                 </div>
-                <div
-                  className={
-                    "text-right basis-[94px] " +
-                    (coin.change == "FALL" ? " text-green-700" : "") +
-                    (coin.change == "RISE" ? " text-red-600" : "")
-                  }
-                >
-                  <h1 className="text-xs font-bold">
-                    {coin.tradePrice.toLocaleString()}
-                  </h1>
-                </div>
+                <MarketGridTradePrice
+                  coinChange={coin.change}
+                  coinTradePrice={coin.tradePrice}
+                />
                 <div
                   className={
                     "text-[0.65rem] text-right flex flex-col justify-center basis-[58px]" +

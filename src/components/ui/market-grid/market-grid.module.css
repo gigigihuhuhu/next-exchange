@@ -1,0 +1,25 @@
+.price-change-rise {
+  animation: border-red 1s ease-in;
+}
+
+.price-change-fall {
+  animation: border-green 1s ease-in;
+}
+
+@keyframes border-red {
+  from {
+    border-color: #dc2626;
+  }
+  to {
+    border-color: #dc2626;
+  }
+}
+
+@keyframes border-green {
+  from {
+    border-color: #15803d;
+  }
+  to {
+    border-color: #15803d;
+  }
+}
