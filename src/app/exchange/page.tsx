@@ -3,7 +3,7 @@ import CoinInfo from "@/components/ui/coin-info/coin-info";
 import Notice from "@/components/ui/coin-info/notice";
 
 import { Market, Markets } from "@/model/market";
-import { MarketGrid } from "@/components/ui/market-grid/market-grid";
+import MarketGrid from "@/components/ui/market-grid/market-grid";
 
 async function fetchMarkets() {
   const res = await fetch("https://api.upbit.com/v1/market/all", {

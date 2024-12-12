@@ -162,11 +162,6 @@ export class Coin {
     return this.market.split("-")[1];
   }
 
-  coinName(locale: string) {
-    const coinCode = this.coinCode();
-    return coinCodeToNameMapper[coinCode][locale as "en" | "kr"];
-  }
-
   static getDefaultCoin() {
     return new Coin(
       "-",

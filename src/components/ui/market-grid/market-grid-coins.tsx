@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Market, Markets } from "@/model/market";
 import { Coin, Coins } from "@/model/coin";
 import { FavoriteIcon } from "@/components/icons";
@@ -9,17 +9,24 @@ import { useSearchParams } from "next/navigation";
 import { UpbitWsReqForm, useUpbitWebSocket } from "@/hooks/useUpbitWebSocket";
 import { v4 as uuidv4 } from "uuid";
 import MarketGridTradePrice from "./market-grid-trade-price";
-import { getDisplayAccTradePrice, getDisplayPrice } from "@/utils/currency";
+import {
+  getDisplayAccTradePrice,
+  getDisplayAccTradePriceByKRW,
+  getDisplayPrice,
+} from "@/utils/currency";
 
-export function MarketGridCoins({
+export default function MarketGridCoins({
   markets,
   currencyTypeCode,
+  BTCtoKRW,
+  setBTCtoKRW,
 }: {
   markets: string;
   currencyTypeCode: string;
+  BTCtoKRW: number | undefined;
+  setBTCtoKRW: React.Dispatch<React.SetStateAction<number | undefined>>;
 }) {
   const [coins, setCoins] = useState<Coins | null>(null);
-  const coinsRef = useRef<Coins | null>(null);
   const currMarket = useSearchParams().get("market");
   const allMarkets = Markets.fromObject(JSON.parse(markets).markets);
 
@@ -30,7 +37,10 @@ export function MarketGridCoins({
       );
       const coinData = Coins.fromDTO(await res.json());
       setCoins(coinData);
-      coinsRef.current = coinData;
+      
+      if(currencyTypeCode === "KRW"){
+        setBTCtoKRW(coinData.findCoin("KRW-BTC").tradePrice);
+      }
     };
 
     fetchCoins();
@@ -48,7 +58,24 @@ export function MarketGridCoins({
     },
   ];
 
-  const onmsgHandler = (event: MessageEvent) => {
+  const onmsgHandlerKRW = (event: MessageEvent) => {
+    try {
+      event.data.text().then((data: string) => {
+        const newCoin: Coin | undefined = Coin.fromWsDTO(JSON.parse(data));
+        setCoins((prevCoins) => {
+          if (!prevCoins) return prevCoins;
+          return prevCoins.updateCoin(newCoin);
+        });
+        if(newCoin.market === "KRW-BTC"){
+          setBTCtoKRW(newCoin.tradePrice)
+        }
+      });
+    } catch (error) {
+      console.error("Error during data parse:", error);
+    }
+  };
+
+  const onmsgHandlerElse = (event: MessageEvent) => {
     try {
       event.data.text().then((data: string) => {
         const newCoin: Coin | undefined = Coin.fromWsDTO(JSON.parse(data));
@@ -61,12 +88,12 @@ export function MarketGridCoins({
       console.error("Error during data parse:", error);
     }
   };
+
   useUpbitWebSocket(
     "wss://api.upbit.com/websocket/v1",
     upbitWsReqForm,
-    onmsgHandler
+    currencyTypeCode === "KRW" ? onmsgHandlerKRW : onmsgHandlerElse
   );
-
   return (
     <>
       {allMarkets
@@ -132,17 +159,22 @@ export function MarketGridCoins({
 
                 <div className="flex flex-col items-end basis-[98px]">
                   <h3
-                    className={(currencyTypeCode === "KRW" ? "hidden" : "block") + " text-xs"}
+                    className={
+                      (currencyTypeCode === "KRW" ? "hidden" : "block") +
+                      " text-xs"
+                    }
                   >
-                    {getDisplayAccTradePrice(coin.accTradePrice24h,currencyTypeCode)}
+                    {getDisplayAccTradePrice(
+                      coin.accTradePrice24h,
+                      currencyTypeCode
+                    )}
                   </h3>
                   <div className="text-[0.7rem] flex flex-row justify-end">
-                    <h4>
-                      {parseInt(
-                        (coin.accTradePrice24h / 1000000).toFixed(0)
-                      ).toLocaleString()}
-                    </h4>
-                    <h4 className="text-gray-500">백만</h4>
+                    {getDisplayAccTradePriceByKRW(
+                      coin.accTradePrice24h,
+                      currencyTypeCode,
+                      BTCtoKRW
+                    )}
                   </div>
                 </div>
               </div>
