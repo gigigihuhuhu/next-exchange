@@ -102,6 +102,8 @@ const CoinInfo = ({ market }: { market: string }) => {
             alt={coin.coinCode()}
             width={26}
             height={26}
+            placeholder="blur"
+            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mPsqQcAAZ0BDTSBuAQAAAAASUVORK5CYII="
             priority
           ></Image>
           <h2 className="ml-2 text-xl font-bold">{`${marketInstance.koreanName}`}</h2>

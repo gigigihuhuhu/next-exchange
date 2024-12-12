@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
         hostname: "cdn.kyungsu.com",
       },
     ],
-    unoptimized: true,
+    unoptimized: false,
   },
 };
 
