@@ -6,7 +6,7 @@ import AuthButton from "@/components/ui/header/auth-button";
 export default function Header() {
   const defaultMarket = "KRW-BTC";
   return (
-    <header className="fixed flex items-center z-10 w-full bg-blue-900 h-12 py-8 justify-between px-10">
+    <header className="min-w-[1324px] fixed flex items-center z-10 w-full bg-blue-900 h-12 py-8 justify-between px-10">
       <Link className="grow-0" href="/">
         <Logo></Logo>
       </Link>

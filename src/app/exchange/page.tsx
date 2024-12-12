@@ -33,8 +33,8 @@ export default async function Exchange({
     ) ?? Market.getDefaultMarket();
 
   return (
-    <div className="bg-gray-200 p-2 flex flex-row gap-2">
-      <div className="flex flex-col gap-2 flex-grow">
+    <div className="p-2 flex flex-row gap-2">
+      <div className="min-w-[900px] flex flex-col gap-2 flex-grow">
         <Notice className="bg-white"></Notice>
         <div>
           <div className="bg-white">
