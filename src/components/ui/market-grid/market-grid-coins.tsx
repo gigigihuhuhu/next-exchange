@@ -9,6 +9,7 @@ import { useSearchParams } from "next/navigation";
 import { UpbitWsReqForm, useUpbitWebSocket } from "@/hooks/useUpbitWebSocket";
 import { v4 as uuidv4 } from "uuid";
 import MarketGridTradePrice from "./market-grid-trade-price";
+import { getDisplayAccTradePrice, getDisplayPrice } from "@/utils/currency";
 
 export function MarketGridCoins({
   markets,
@@ -113,7 +114,7 @@ export function MarketGridCoins({
                 />
                 <div
                   className={
-                    "text-[0.65rem] text-right flex flex-col justify-center basis-[58px]" +
+                    "text-[0.7rem] text-right flex flex-col justify-center basis-[62px]" +
                     (coin.change == "FALL" ? " text-green-700" : "") +
                     (coin.change == "RISE" ? " text-red-600" : "")
                   }
@@ -122,16 +123,27 @@ export function MarketGridCoins({
                     (coin.signedChangeRate > 0 ? "+" : "") +
                     (coin.signedChangeRate * 100).toFixed(2)
                   }%`}</h3>
-                  <h3>{coin.signedChangePrice.toLocaleString()}</h3>
+                  <h3
+                    className={currencyTypeCode === "KRW" ? "block" : "hidden"}
+                  >
+                    {getDisplayPrice(coin.signedChangePrice, currencyTypeCode)}
+                  </h3>
                 </div>
 
-                <div className="text-xs basis-[98px] flex flex-row justify-end">
-                  <h4>
-                    {parseInt(
-                      (coin.accTradePrice24h / 1000000).toFixed(0)
-                    ).toLocaleString()}
-                  </h4>
-                  <h4 className="text-gray-500">백만</h4>
+                <div className="flex flex-col items-end basis-[98px]">
+                  <h3
+                    className={(currencyTypeCode === "KRW" ? "hidden" : "block") + " text-xs"}
+                  >
+                    {getDisplayAccTradePrice(coin.accTradePrice24h,currencyTypeCode)}
+                  </h3>
+                  <div className="text-[0.7rem] flex flex-row justify-end">
+                    <h4>
+                      {parseInt(
+                        (coin.accTradePrice24h / 1000000).toFixed(0)
+                      ).toLocaleString()}
+                    </h4>
+                    <h4 className="text-gray-500">백만</h4>
+                  </div>
                 </div>
               </div>
             </Link>
