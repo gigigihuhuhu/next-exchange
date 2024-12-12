@@ -46,15 +46,4 @@ export const footerText =
 export const copyright =
   "Copyright © 2017 - 2024 Kyungsu Park. All rights reserved.";
 
-  export const coinCodeToNameMapper: { [key: string]: { en: string, kr: string } } = {
-    BTC: { en: "Bitcoin", kr: "비트코인" },
-    TRX: { en: "Tron", kr: "트론" },
-    ADA: { en: "Ada", kr: "에이다" },
-    SHIB: { en: "Shiba Inu", kr: "시바이누" },
-    ETH: { en: "Ethereum", kr: "이더리움" },
-    PEPE: { en: "Pepe", kr: "페페" },
-    DOGE: { en: "Dogecoin", kr: "도지코인" },
-    XRP: { en: "Ripple", kr: "리플" },
-    XLM: { en: "Lumen", kr: "스텔라루멘" },
-  };
-  
+export const noticeText = "가상자산시장 변동성 확대에 따른 유의사항 안내";

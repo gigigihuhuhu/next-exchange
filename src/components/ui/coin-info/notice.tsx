@@ -1,6 +1,7 @@
 "use client";
 
 import { XIcon, NoticeIcon } from "@/components/icons";
+import { noticeText } from "@/data/sample-data";
 import { useEffect, useState } from "react";
 
 interface NoticeProps {
@@ -11,7 +12,7 @@ const Notice = ({ className }: NoticeProps) => {
   const [notice, setNotice] = useState<string>("");
 
   useEffect(() => {
-    setNotice("가상자산시장 변동성 확대에 따른 유의사항 안내");
+    setNotice(noticeText);
   }, []);
 
   return (

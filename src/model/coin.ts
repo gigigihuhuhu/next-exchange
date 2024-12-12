@@ -1,5 +1,3 @@
-import { coinCodeToNameMapper } from "@/data/sample-data";
-
 interface CoinRestDTO {
   market: string;
   trade_date: string;
