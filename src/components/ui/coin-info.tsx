@@ -22,7 +22,7 @@ const CoinInfo = ({ market }: { market: string }) => {
         `https://api.upbit.com/v1/ticker?markets=${parsedMarket.marketCode}`
       );
       const result = await res.json();
-      setData(Coin.fromDTO(result[0]));
+      setData(Coin.fromRestDTO(result[0]));
     };
 
     const interval = parseInt(process.env.POLLING_INTERVAL || "10000", 10);

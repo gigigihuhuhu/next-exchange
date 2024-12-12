@@ -49,4 +49,8 @@ export class Markets {
   findMarketByCurrencyType(currencyType : string) {
     return this.markets.filter((a) => a.currencyType() === currencyType);
   }
+
+  getMarketCodes(){
+    return this.markets.map((a) => a.marketCode);
+  }
 }

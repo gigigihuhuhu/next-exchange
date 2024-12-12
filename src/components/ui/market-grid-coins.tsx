@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Market, Markets } from "@/model/market";
 import { Coin, Coins } from "@/model/coin";
 import { FavoriteIcon } from "../icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { UpbitWsReqForm, useUpbitWebSocket } from "@/hooks/useUpbitWebSocket";
+import { v4 as uuidv4 } from "uuid";
 
 export function MarketGridCoins({
   markets,
@@ -15,7 +17,8 @@ export function MarketGridCoins({
   currencyTypeCode: string;
 }) {
   const [coins, setCoins] = useState<Coins | null>(null);
-  const [currMarket] = useState<string | null>(useSearchParams().get("market"));
+  const coinsRef = useRef<Coins | null>(null);
+  const currMarket = useSearchParams().get("market");
   const allMarkets = Markets.fromObject(JSON.parse(markets).markets);
 
   useEffect(() => {
@@ -23,20 +26,46 @@ export function MarketGridCoins({
       const res = await fetch(
         `https://api.upbit.com/v1/ticker/all?quote_currencies=${currencyTypeCode}`
       );
-      const result = await res.json();
-      setCoins(Coins.fromDTO(result));
+      const coinData = Coins.fromDTO(await res.json());
+      setCoins(coinData);
+      coinsRef.current = coinData;
     };
 
-    const interval = parseInt(process.env.POLLING_INTERVAL || "10000", 10);
-
     fetchCoins();
-
-    const fetchInterval = setInterval(() => {
-      fetchCoins();
-    }, interval);
-
-    return () => clearInterval(fetchInterval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const upbitWsReqForm: UpbitWsReqForm = [
+    { ticket: uuidv4() },
+    {
+      type: "ticker",
+      codes: allMarkets
+        .findMarketByCurrencyType(currencyTypeCode)
+        .map((a) => a.marketCode),
+      is_only_realtime: true,
+    },
+  ];
+
+  const onmsgHandler = (event: MessageEvent) => {
+    try {
+      event.data
+        .text()
+        .then((data: string) => {
+          const newCoin: Coin | undefined = Coin.fromWsDTO(JSON.parse(data));
+          setCoins((prevCoins) => {
+            if (!prevCoins) return prevCoins;
+            return prevCoins.updateCoin(newCoin);
+          });
+        });
+    } catch (error) {
+      console.error("Error during data parse:", error);
+    }
+  };
+  useUpbitWebSocket(
+    "wss://api.upbit.com/websocket/v1",
+    upbitWsReqForm,
+    onmsgHandler
+  );
 
   return (
     <>
