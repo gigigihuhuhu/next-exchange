@@ -159,12 +159,16 @@ const CoinInfo = ({ market }: { market: string }) => {
                 </h1>
                 <h3 className="text-sm">{coin.currencyType()}</h3>
               </div>
-              <div>
+              <div className="flex flex-row items-center font-semibold">
                 <h3>{`${
                   (coin.signedChangeRate > 0 ? "+" : "") +
                   (coin.signedChangeRate * 100).toFixed(2)
                 }%`}</h3>
-                <h3>{coin.signedChangePrice.toLocaleString()}</h3>
+                <h3>
+                  {(coin.change == "FALL" ? "▼" : "") +
+                    (coin.change == "RISE" ? "▲" : "") +
+                    coin.signedChangePrice.toLocaleString()}
+                </h3>
               </div>
             </div>
             <div className="justify-self-end">
