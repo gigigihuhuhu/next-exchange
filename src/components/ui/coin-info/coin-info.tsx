@@ -7,7 +7,7 @@ import Image from "next/image";
 import { Coin } from "@/model/coin";
 import { Market } from "@/model/market";
 import { SettingsIcon } from "@/components/icons";
-import MiniChart from "@/components/ui/lw-minichart";
+import MiniChart from "@/components/ui/coin-info/lw-minichart";
 import { UpbitWsReqForm } from "@/hooks/useUpbitWebSocket";
 
 const CoinInfo = ({ market }: { market: string }) => {
@@ -41,7 +41,6 @@ const CoinInfo = ({ market }: { market: string }) => {
         is_only_realtime: true,
       },
     ];
-    console.log("upbitWsReqForm", upbitWsReqForm);
     const onmsgHandler = (event: MessageEvent) => {
       try {
         event.data.text().then((data: string) => {

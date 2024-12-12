@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Market, Markets } from "@/model/market";
 import { Coin, Coins } from "@/model/coin";
-import { FavoriteIcon } from "../icons";
+import { FavoriteIcon } from "@/components/icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { UpbitWsReqForm, useUpbitWebSocket } from "@/hooks/useUpbitWebSocket";

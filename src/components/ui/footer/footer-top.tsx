@@ -1,6 +1,6 @@
 import { footerData } from "@/data/sample-data";
 import Link from "next/link";
-import { GithubIcon, LeetcodeIcon } from "../icons";
+import { GithubIcon, LeetcodeIcon } from "@/components/icons";
 
 export default function FooterTop() {
   return (

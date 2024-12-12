@@ -1,7 +1,7 @@
 import { Logo } from "@/components/icons";
 import Link from "next/link";
-import NavLink from "@/components/ui/nav-link";
-import AuthButton from "@/components/ui/auth-button";
+import NavLink from "@/components/ui/header/nav-link";
+import AuthButton from "@/components/ui/header/auth-button";
 
 export default function Header() {
   const defaultMarket = "KRW-BTC";
