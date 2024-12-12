@@ -109,6 +109,7 @@ export function MarketGridCoins({
                 <MarketGridTradePrice
                   coinChange={coin.change}
                   coinTradePrice={coin.tradePrice}
+                  currencyTypeCode={currencyTypeCode}
                 />
                 <div
                   className={

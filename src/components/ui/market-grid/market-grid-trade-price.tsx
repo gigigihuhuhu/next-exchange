@@ -1,13 +1,16 @@
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import { useRef, useState } from "react";
 import style from "./market-grid.module.css";
+import { getDisplayPrice } from "@/utils/currency";
 
 export default function MarketGridTradePrice({
   coinChange,
   coinTradePrice,
+  currencyTypeCode,
 }: {
   coinChange: string;
   coinTradePrice: number;
+  currencyTypeCode: string;
 }) {
   const [displayPrice, setDisplayPrice] = useState<string>("-");
   const [price, setPrice] = useState<number>(0);
@@ -18,7 +21,7 @@ export default function MarketGridTradePrice({
     setDisplayPrice((prevPrice) => {
       if (prevPrice === "-") {
         setPrice(coinTradePrice);
-        return coinTradePrice.toLocaleString();
+        return getDisplayPrice(coinTradePrice, currencyTypeCode);
       }
 
       containerRef.current?.classList.remove(style["price-change-rise"]);
@@ -39,7 +42,7 @@ export default function MarketGridTradePrice({
       }, 1000);
 
       setPrice(coinTradePrice);
-      return coinTradePrice.toLocaleString();
+      return getDisplayPrice(coinTradePrice, currencyTypeCode);
     });
   }, [coinTradePrice]);
 

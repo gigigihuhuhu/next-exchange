@@ -8,7 +8,7 @@ export function MarketGrid({ markets }: { markets: string }) {
 
   const currencyTypes = [
     { codeName: "KRW", koreanName: "원화", englishName: "KRW" },
-    { codeName: "BTC", koreanName: "비트코인", englishName: "BTC" },
+    { codeName: "BTC", koreanName: "BTC", englishName: "BTC" },
     { codeName: "USDT", koreanName: "USDT", englishName: "USDT" },
   ];
 
@@ -21,9 +21,9 @@ export function MarketGrid({ markets }: { markets: string }) {
               <button
                 key={index}
                 className={
-                  activeCurrencyIdx === index
+                  (activeCurrencyIdx === index
                     ? "text-blue-600 border-b-4 border-blue-600"
-                    : "hover:border-b-4 hover:border-gray-400"
+                    : "hover:border-b-4 hover:border-gray-400") + " text-sm"
                 }
                 onClick={() => setActiveCurrencyIdx(index)}
               >
