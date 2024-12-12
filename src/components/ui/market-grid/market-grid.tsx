@@ -16,15 +16,15 @@ export default function MarketGrid({ markets }: { markets: string }) {
   return (
     <>
       <div className="sticky top-0 bg-white z-[5]">
-        <div className="flex flex-row items-start justify-between *:w-full *:font-semibold *:py-1 *:transition-colors *:duration-200">
+        <div className="h-[45px] flex flex-row items-end justify-between *:w-full *:font-semibold *:py-1 *:transition-colors *:duration-200">
           {currencyTypes.map((currencyType, index) => {
             return (
               <button
                 key={index}
                 className={
                   (activeCurrencyIdx === index
-                    ? "text-blue-600 border-b-4 border-blue-600"
-                    : "hover:border-b-4 hover:border-gray-400") + " text-sm"
+                    ? "text-blue-600 !border-blue-600"
+                    : "hover:border-gray-400") + " text-sm border-b-4 border-transparent h-full box-border"
                 }
                 onClick={() => setActiveCurrencyIdx(index)}
               >

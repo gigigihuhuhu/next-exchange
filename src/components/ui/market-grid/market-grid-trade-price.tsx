@@ -1,16 +1,18 @@
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import { useRef, useState } from "react";
 import style from "./market-grid.module.css";
-import { getDisplayPrice } from "@/utils/currency";
+import { getDisplayPrice, getDisplayPriceByKRW } from "@/utils/currency";
 
 export default function MarketGridTradePrice({
   coinChange,
   coinTradePrice,
   currencyTypeCode,
+  BTCtoKRW,
 }: {
   coinChange: string;
   coinTradePrice: number;
   currencyTypeCode: string;
+  BTCtoKRW: number | undefined;
 }) {
   const [displayPrice, setDisplayPrice] = useState<string>("-");
   const [price, setPrice] = useState<number>(0);
@@ -49,13 +51,26 @@ export default function MarketGridTradePrice({
   return (
     <div
       ref={containerRef}
-      className={
-        "border-transparent border box-border place-content-center h-full text-right basis-[94px] " +
-        (coinChange == "FALL" ? " text-green-700" : "") +
-        (coinChange == "RISE" ? " text-red-600" : "")
-      }
+      className="border-transparent border box-border place-content-center h-full text-right basis-[94px] "
     >
-      <h1 className="text-xs font-bold">{displayPrice}</h1>
+      <h3
+        className={
+          "text-xs font-bold " +
+          (coinChange == "FALL" ? " text-green-700" : "") +
+          (coinChange == "RISE" ? " text-red-600" : "")
+        }
+      >
+        {displayPrice}
+      </h3>
+      <div
+        className={
+          "flex flex-row justify-end gap-1 font-medium text-[0.7rem]" +
+          (currencyTypeCode === "KRW" ? " hidden" : "")
+        }
+      >
+        <h3>{getDisplayPriceByKRW(price, currencyTypeCode, BTCtoKRW)}</h3>
+        <h4 className="font-medium text-gray-500">KRW</h4>
+      </div>
     </div>
   );
 }

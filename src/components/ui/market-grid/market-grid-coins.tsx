@@ -109,11 +109,11 @@ export default function MarketGridCoins({
                   (currMarket === market.marketCode ? " bg-gray-100" : "")
                 }
               >
-                <div className="flex flex-row items-center justify-start gap-2 basis-[30px]">
+                <div className="flex flex-row items-center justify-start gap-1 basis-[30px]">
                   <div>
                     <FavoriteIcon></FavoriteIcon>
                   </div>
-                  <div className="w-4">
+                  <div className="pr-1">
                     {coin.change == "FALL" ? (
                       <p className="text-green-700 text-xs">▼</p>
                     ) : (
@@ -138,6 +138,7 @@ export default function MarketGridCoins({
                   coinChange={coin.change}
                   coinTradePrice={coin.tradePrice}
                   currencyTypeCode={currencyTypeCode}
+                  BTCtoKRW={BTCtoKRW}
                 />
                 <div
                   className={
@@ -169,7 +170,7 @@ export default function MarketGridCoins({
                       currencyTypeCode
                     )}
                   </h3>
-                  <div className="text-[0.7rem] flex flex-row justify-end">
+                  <div className="text-[0.7rem] flex flex-row justify-end gap-1">
                     {getDisplayAccTradePriceByKRW(
                       coin.accTradePrice24h,
                       currencyTypeCode,
