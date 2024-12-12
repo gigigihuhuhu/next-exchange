@@ -25,15 +25,7 @@ const CoinInfo = ({ market }: { market: string }) => {
       setData(Coin.fromRestDTO(result[0]));
     };
 
-    const interval = parseInt(process.env.POLLING_INTERVAL || "10000", 10);
-
     fetchData();
-
-    const fetchInterval = setInterval(() => {
-      fetchData();
-    }, interval);
-
-    return () => clearInterval(fetchInterval);
   }, [market]);
 
   if (!data) {
