@@ -1,5 +1,6 @@
 "use client";
 
+import { v4 as uuidv4 } from "uuid";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -7,28 +8,88 @@ import { Coin } from "@/model/coin";
 import { Market } from "@/model/market";
 import { SettingsIcon } from "@/components/icons";
 import MiniChart from "@/components/ui/lw-minichart";
+import { UpbitWsReqForm } from "@/hooks/useUpbitWebSocket";
 
 const CoinInfo = ({ market }: { market: string }) => {
-  const [data, setData] = useState<Coin | null>(null);
+  const [coin, setCoin] = useState<Coin | null>(null);
   const [activeTab, setActiveTab] = useState<number>(0);
-  const [marketInstance, setMarketInstance] = useState<Market>(Market.getDefaultMarket());
+  const [marketInstance, setMarketInstance] = useState<Market>(
+    Market.getDefaultMarket()
+  );
 
   useEffect(() => {
     const parsedMarket = Market.fromObject(JSON.parse(market));
     setMarketInstance(parsedMarket);
-
     const fetchData = async () => {
       const res = await fetch(
         `https://api.upbit.com/v1/ticker?markets=${parsedMarket.marketCode}`
       );
       const result = await res.json();
-      setData(Coin.fromRestDTO(result[0]));
+      setCoin(Coin.fromRestDTO(result[0]));
     };
 
     fetchData();
   }, [market]);
 
-  if (!data) {
+  useEffect(() => {
+    const parsedMarket = Market.fromObject(JSON.parse(market));
+    const upbitWsReqForm: UpbitWsReqForm = [
+      { ticket: uuidv4() },
+      {
+        type: "ticker",
+        codes: [parsedMarket.marketCode],
+        is_only_realtime: true,
+      },
+    ];
+    console.log("upbitWsReqForm", upbitWsReqForm);
+    const onmsgHandler = (event: MessageEvent) => {
+      try {
+        event.data.text().then((data: string) => {
+          const newCoin: Coin | undefined = Coin.fromWsDTO(JSON.parse(data));
+          setCoin(newCoin);
+        });
+      } catch (error) {
+        console.error("Error during data parse:", error);
+      }
+    };
+
+    const connect = (
+      url: string,
+      upbitWsReqForm: UpbitWsReqForm,
+      onmsgHandler: (event: MessageEvent) => void
+    ) => {
+      console.debug("WebSocket connecting ... ", url);
+      const socket = new WebSocket(url);
+      socket.onerror = (error: Event) => {
+        console.error("WebSocket Error:", error);
+      };
+      socket.onclose = () => {
+        console.debug("WebSocket closed.");
+      };
+      socket.onopen = () => {
+        console.debug(
+          "WebSocket connnection established. send request form.",
+          upbitWsReqForm
+        );
+        socket.send(JSON.stringify(upbitWsReqForm));
+      };
+      socket.onmessage = onmsgHandler;
+
+      return socket;
+    };
+
+    const socket = connect(
+      "wss://api.upbit.com/websocket/v1",
+      upbitWsReqForm,
+      onmsgHandler
+    );
+
+    return () => {
+      socket.close();
+    };
+  }, [market]);
+
+  if (!coin) {
     return <div></div>;
   }
 
@@ -37,14 +98,14 @@ const CoinInfo = ({ market }: { market: string }) => {
       <div className="px-4 flex flex-row items-center justify-between border-b border-solid border-gray-200">
         <div className="flex flex-row items-center grow">
           <Image
-            src={`https://cdn.kyungsu.com/samples/coin/${data.coinCode()}.png`}
-            alt={data.coinCode()}
+            src={`https://cdn.kyungsu.com/samples/coin/${coin.coinCode()}.png`}
+            alt={coin.coinCode()}
             width={26}
             height={26}
             priority
           ></Image>
           <h2 className="ml-2 text-xl font-bold">{`${marketInstance.koreanName}`}</h2>
-          <h3 className="ml-1 text-xs text-gray-500 font-medium">{`${data.coinCode()}/${data.currencyType()}`}</h3>
+          <h3 className="ml-1 text-xs text-gray-500 font-medium">{`${coin.coinCode()}/${coin.currencyType()}`}</h3>
         </div>
 
         <div className="*:w-32 *:text-lg *:font-bold *:py-1 *:transition-colors *:duration-200">
@@ -87,22 +148,22 @@ const CoinInfo = ({ market }: { market: string }) => {
             <div
               className={
                 "flex flex-col justify-center *:flex *:flex-row *:gap-2 *:items-end" +
-                (data.change == "FALL" ? " text-green-700" : "") +
-                (data.change == "RISE" ? " text-red-600" : "")
+                (coin.change == "FALL" ? " text-green-700" : "") +
+                (coin.change == "RISE" ? " text-red-600" : "")
               }
             >
               <div>
                 <h1 className="text-3xl font-bold">
-                  {data.tradePrice.toLocaleString()}
+                  {coin.tradePrice.toLocaleString()}
                 </h1>
-                <h3 className="text-sm">{data.currencyType()}</h3>
+                <h3 className="text-sm">{coin.currencyType()}</h3>
               </div>
               <div>
                 <h3>{`${
-                  (data.signedChangeRate > 0 ? "+" : "") +
-                  (data.signedChangeRate * 100).toFixed(2)
+                  (coin.signedChangeRate > 0 ? "+" : "") +
+                  (coin.signedChangeRate * 100).toFixed(2)
                 }%`}</h3>
-                <h3>{data.signedChangePrice.toLocaleString()}</h3>
+                <h3>{coin.signedChangePrice.toLocaleString()}</h3>
               </div>
             </div>
             <div className="justify-self-end">
@@ -112,14 +173,14 @@ const CoinInfo = ({ market }: { market: string }) => {
               <div className="">
                 <h3 className="text-xs text-gray-700">고가</h3>
                 <h3 className="font-semibold text-sm text-red-600">
-                  {data.highPrice.toLocaleString()}
+                  {coin.highPrice.toLocaleString()}
                 </h3>
               </div>
               <hr className="my-2" />
               <div>
                 <h3 className="text-xs text-gray-700">저가</h3>
                 <h3 className="font-semibold text-sm text-green-700">
-                  {data.lowPrice.toLocaleString()}
+                  {coin.lowPrice.toLocaleString()}
                 </h3>
               </div>
             </div>
@@ -129,9 +190,9 @@ const CoinInfo = ({ market }: { market: string }) => {
                 <h3 className="text-xs text-gray-700">거래량(24h)</h3>
                 <div className="flex flex-row gap-1 items-center">
                   <h3 className="text-sm">
-                    {data.accTradeVolume24h.toLocaleString()}
+                    {coin.accTradeVolume24h.toLocaleString()}
                   </h3>
-                  <h4 className="text-xs text-gray-500">{data.coinCode()}</h4>
+                  <h4 className="text-xs text-gray-500">{coin.coinCode()}</h4>
                 </div>
               </div>
               <hr className="my-2" />
@@ -142,10 +203,10 @@ const CoinInfo = ({ market }: { market: string }) => {
                 <div className="text-xs flex flex-row gap-1 items-center">
                   <h3>
                     {parseInt(
-                      data.accTradePrice24h.toFixed(0)
+                      coin.accTradePrice24h.toFixed(0)
                     ).toLocaleString()}
                   </h3>
-                  <h4 className="text-gray-500">{data.currencyType()}</h4>
+                  <h4 className="text-gray-500">{coin.currencyType()}</h4>
                 </div>
               </div>
             </div>
