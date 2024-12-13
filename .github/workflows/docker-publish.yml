@@ -32,6 +32,12 @@ jobs:
         with:
           node-version: 18.x
       
+      - name: .env setting
+        run: |
+          echo "NEXT_PUBLIC_KEYCLOAK_URL=${{ secrets.NEXT_PUBLIC_KEYCLOAK_URL }}" >> .env
+          echo "NEXT_PUBLIC_KEYCLOAK_REALM=${{ secrets.NEXT_PUBLIC_KEYCLOAK_REALM }}" >> .env
+          echo "NEXT_PUBLIC_KEYCLOAK_CLIENT=${{ secrets.NEXT_PUBLIC_KEYCLOAK_CLIENT }}" >> .env
+
       - name: Install dependencies
         run: npm install
 
