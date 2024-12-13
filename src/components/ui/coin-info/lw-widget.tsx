@@ -1,9 +1,11 @@
 'use client';
+import { Market } from '@/model/market';
 import React, { useEffect, useRef, memo } from 'react';
 
-function TradingViewWidget() {
+function TradingViewWidget({market}:{market:string}) {
   const container = useRef<HTMLDivElement>(null);
 
+  const parsedMarket = Market.fromObject(JSON.parse(market));
   useEffect(
     () => {
       if(container.current?.querySelector('script')) return;
@@ -15,8 +17,8 @@ function TradingViewWidget() {
       script.innerHTML = `
         {
           "autosize": true,
-          "symbol": "UPBIT:BTCKRW",
-          "timezone": "Etc/UTC",
+          "symbol": "UPBIT:${parsedMarket.coinCode()+parsedMarket.currencyType()}",
+          "timezone": "Asia/Seoul",
           "theme": "light",
           "style": "1",
           "locale": "kr",

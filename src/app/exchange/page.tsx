@@ -41,7 +41,7 @@ export default async function Exchange({
             <CoinInfo market={JSON.stringify(coinInfoMarket)}></CoinInfo>
           </div>
           <div className="bg-white min-h-[0px] h-[calc(100vh-218px)]">
-            <LwWidget></LwWidget>
+            <LwWidget market={JSON.stringify(coinInfoMarket)}></LwWidget>
           </div>
         </div>
       </div>

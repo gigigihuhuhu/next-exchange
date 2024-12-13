@@ -147,7 +147,7 @@ const CoinInfo = ({ market }: { market: string }) => {
               </div>
             </div>
             <div className="justify-self-end">
-              <MiniChart></MiniChart>
+              <MiniChart market={market}></MiniChart>
             </div>
             <div className="flex flex-col *:flex *:flex-row *:justify-between *:items-center font-medium">
               <div className="">

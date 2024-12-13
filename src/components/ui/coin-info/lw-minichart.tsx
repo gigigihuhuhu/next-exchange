@@ -1,12 +1,18 @@
 "use client";
 
+import { Market } from "@/model/market";
 import React, { useEffect, useRef, memo } from "react";
 
-function Minichart() {
+function Minichart({market}:{market:string}) {
   const container = useRef<HTMLDivElement>(null);
+  const parsedMarket = Market.fromObject(JSON.parse(market));
 
   useEffect(() => {
     if (container.current?.querySelector("script")) return;
+
+    if (container.current) {
+      container.current.innerHTML = "";
+    }
 
     const script = document.createElement("script");
     script.src =
@@ -15,7 +21,7 @@ function Minichart() {
     script.async = true;
     script.innerHTML = `
               {
-        "symbol": "UPBIT:BTCKRW",
+        "symbol": "UPBIT:${parsedMarket.coinCode()+parsedMarket.currencyType()}",
         "locale": "kr",
         "dateRange": "1M",
         "colorTheme": "light",
@@ -26,7 +32,13 @@ function Minichart() {
         "noTimeScale": true
       }`;
     container.current?.appendChild(script);
-  }, []);
+
+    return () => {
+      if (container.current) {
+        container.current.innerHTML = ""; // cleanup 스크립트 제거
+      }
+    };
+  }, [market]);
 
   return (
     <div className="h-[50px] w-[150px] overflow-hidden relative">
