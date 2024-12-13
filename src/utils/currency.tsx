@@ -88,7 +88,7 @@ const getPrecisionString = (price: number) => {
   } else if (price >= 1) {
     return price.toFixed(3);
   } else {
-    return price;
+    return price.toFixed(5);
   }
 };
 

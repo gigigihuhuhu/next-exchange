@@ -9,6 +9,7 @@ import { Market } from "@/model/market";
 import { SettingsIcon } from "@/components/icons";
 import MiniChart from "@/components/ui/coin-info/lw-minichart";
 import { UpbitWsReqForm } from "@/hooks/useUpbitWebSocket";
+import { getDisplayAccTradePrice, getDisplayPrice } from "@/utils/currency";
 
 const CoinInfo = ({ market }: { market: string }) => {
   const [coin, setCoin] = useState<Coin | null>(null);
@@ -155,7 +156,7 @@ const CoinInfo = ({ market }: { market: string }) => {
             >
               <div>
                 <h1 className="text-3xl font-bold">
-                  {coin.tradePrice.toLocaleString()}
+                  {getDisplayPrice(coin.tradePrice, coin.currencyType())}
                 </h1>
                 <h3 className="text-sm">{coin.currencyType()}</h3>
               </div>
@@ -167,7 +168,10 @@ const CoinInfo = ({ market }: { market: string }) => {
                 <h3>
                   {(coin.change == "FALL" ? "▼" : "") +
                     (coin.change == "RISE" ? "▲" : "") +
-                    coin.signedChangePrice.toLocaleString()}
+                    getDisplayPrice(
+                      coin.signedChangePrice,
+                      coin.currencyType()
+                    )}
                 </h3>
               </div>
             </div>
@@ -178,14 +182,14 @@ const CoinInfo = ({ market }: { market: string }) => {
               <div className="">
                 <h3 className="text-xs text-gray-700">고가</h3>
                 <h3 className="font-semibold text-sm text-red-600">
-                  {coin.highPrice.toLocaleString()}
+                  {getDisplayPrice(coin.highPrice, coin.currencyType())}
                 </h3>
               </div>
               <hr className="my-2" />
               <div>
                 <h3 className="text-xs text-gray-700">저가</h3>
                 <h3 className="font-semibold text-sm text-green-700">
-                  {coin.lowPrice.toLocaleString()}
+                  {getDisplayPrice(coin.lowPrice, coin.currencyType())}
                 </h3>
               </div>
             </div>
@@ -207,9 +211,10 @@ const CoinInfo = ({ market }: { market: string }) => {
                 </h3>
                 <div className="text-xs flex flex-row gap-1 items-center">
                   <h3>
-                    {parseInt(
-                      coin.accTradePrice24h.toFixed(0)
-                    ).toLocaleString()}
+                    {getDisplayAccTradePrice(
+                      coin.accTradePrice24h,
+                      coin.currencyType()
+                    )}
                   </h3>
                   <h4 className="text-gray-500">{coin.currencyType()}</h4>
                 </div>
