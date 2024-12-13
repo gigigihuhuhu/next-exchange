@@ -180,7 +180,7 @@ const CoinInfo = ({ market }: { market: string }) => {
                 <h3 className="font-medium text-xs text-gray-700">
                   거래대금(24h)
                 </h3>
-                <div className="text-xs flex flex-row gap-1 items-center">
+                <div className="text-[0.7rem] flex flex-row gap-1 items-center">
                   <h3>
                     {getDisplayAccTradePrice(
                       coin.accTradePrice24h,
