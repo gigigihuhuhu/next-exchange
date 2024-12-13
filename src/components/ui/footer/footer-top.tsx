@@ -20,7 +20,7 @@ export default function FooterTop() {
         ))}
       </div>
       <div className="basis-36 flex flex-row items-start justify-end *:w-[24px] *:[h-24px] *:rounded-full gap-4">
-        <Link href="https://github.com/gigigihuhuhu/next-transaction">
+        <Link href="https://github.com/gigigihuhuhu/next-exchange">
           <GithubIcon fill="gray"></GithubIcon>
         </Link>
         <Link

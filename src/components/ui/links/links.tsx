@@ -10,7 +10,7 @@ export default function Links() {
     <div className="flex flex-row gap-8 items-center justify-start pl-20 pt-5">
       <div className="text-3xl font-semibold">Not yet!</div>
       <button
-        onClick={() => handleClick("https://github.com/gigigihuhuhu/next-transaction/commits/main/")}
+        onClick={() => handleClick("https://github.com/gigigihuhuhu/next-exchange/commits/main/")}
         className="group transition-colors duration-200 text-lg text-gray-900 font-semibold px-4 py-2 border border-solid border-blue-300 rounded-xl hover:border-blue-700 hover:bg-blue-100 flex flex-row items-center"
       >
         Github 소스코드 보러가기
