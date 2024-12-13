@@ -6,6 +6,7 @@ const useDidMountEffect = (func: () => void, deps: DependencyList | undefined) =
   useEffect(() => {
     if (didMount.current) func();
     else didMount.current = true;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 };
 

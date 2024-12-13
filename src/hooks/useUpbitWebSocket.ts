@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { DependencyList, useEffect } from "react";
 
 interface TicketField {
   ticket: string; // UUID
@@ -17,12 +17,15 @@ export type UpbitWsReqForm = [TicketField, TypeField, FormatField?];
 export const useUpbitWebSocket = (
   url: string,
   upbitWsReqForm: UpbitWsReqForm,
-  onmsgHandler: (event: MessageEvent) => void
+  onmsgHandler: (event: MessageEvent) => void,
+  deps: DependencyList | undefined
 ) => {
   useEffect(() => {
-    connect(url, upbitWsReqForm, onmsgHandler);
+    const socket = connect(url, upbitWsReqForm, onmsgHandler);
+
+    return ()=>{socket.close()};
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, deps);
 };
 
 const connect = (
@@ -37,17 +40,6 @@ const connect = (
   };
   socket.onclose = () => {
     console.debug("WebSocket closed.");
-    let interval = 10000;
-    if(process.env.NEXT_PUBLIC_WEBSOCKET_RECONNECT_INTERVAL){
-      interval = parseInt(process.env.NEXT_PUBLIC_WEBSOCKET_RECONNECT_INTERVAL,10)
-    }
-    else{
-      console.debug("NEXT_PUBLIC_WEBSOCKET_RECONNECT_INTERVAL is not set. Use default value 10000ms");
-    }
-    console.debug("Reconnect after " + interval + "ms ...");
-    setTimeout(() => {
-      connect(url, upbitWsReqForm, onmsgHandler);
-    }, interval);
   };
   socket.onopen = () => {
     console.debug(
@@ -57,4 +49,6 @@ const connect = (
     socket.send(JSON.stringify(upbitWsReqForm));
   };
   socket.onmessage = onmsgHandler;
+  
+  return socket;
 };

@@ -92,7 +92,8 @@ export default function MarketGridCoins({
   useUpbitWebSocket(
     "wss://api.upbit.com/websocket/v1",
     upbitWsReqForm,
-    currencyTypeCode === "KRW" ? onmsgHandlerKRW : onmsgHandlerElse
+    currencyTypeCode === "KRW" ? onmsgHandlerKRW : onmsgHandlerElse,
+    []
   );
   return (
     <>

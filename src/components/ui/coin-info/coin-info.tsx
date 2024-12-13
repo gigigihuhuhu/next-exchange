@@ -8,7 +8,7 @@ import { Coin } from "@/model/coin";
 import { Market } from "@/model/market";
 import { SettingsIcon } from "@/components/icons";
 import MiniChart from "@/components/ui/coin-info/lw-minichart";
-import { UpbitWsReqForm } from "@/hooks/useUpbitWebSocket";
+import { UpbitWsReqForm, useUpbitWebSocket } from "@/hooks/useUpbitWebSocket";
 import { getDisplayAccTradePrice, getDisplayPrice } from "@/utils/currency";
 import Links from "@/components/ui/links/links";
 
@@ -19,8 +19,8 @@ const CoinInfo = ({ market }: { market: string }) => {
     Market.getDefaultMarket()
   );
 
+  const parsedMarket = Market.fromObject(JSON.parse(market));
   useEffect(() => {
-    const parsedMarket = Market.fromObject(JSON.parse(market));
     setMarketInstance(parsedMarket);
     const fetchData = async () => {
       const res = await fetch(
@@ -31,64 +31,34 @@ const CoinInfo = ({ market }: { market: string }) => {
     };
 
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [market]);
 
-  useEffect(() => {
-    const parsedMarket = Market.fromObject(JSON.parse(market));
-    const upbitWsReqForm: UpbitWsReqForm = [
-      { ticket: uuidv4() },
-      {
-        type: "ticker",
-        codes: [parsedMarket.marketCode],
-        is_only_realtime: true,
-      },
-    ];
-    const onmsgHandler = (event: MessageEvent) => {
-      try {
-        event.data.text().then((data: string) => {
-          const newCoin: Coin | undefined = Coin.fromWsDTO(JSON.parse(data));
-          setCoin(newCoin);
-        });
-      } catch (error) {
-        console.error("Error during data parse:", error);
-      }
-    };
+  const upbitWsReqForm: UpbitWsReqForm = [
+    { ticket: uuidv4() },
+    {
+      type: "ticker",
+      codes: [parsedMarket.marketCode],
+      is_only_realtime: true,
+    },
+  ];
+  const onmsgHandler = (event: MessageEvent) => {
+    try {
+      event.data.text().then((data: string) => {
+        const newCoin: Coin | undefined = Coin.fromWsDTO(JSON.parse(data));
+        setCoin(newCoin);
+      });
+    } catch (error) {
+      console.error("Error during data parse:", error);
+    }
+  };
 
-    const connect = (
-      url: string,
-      upbitWsReqForm: UpbitWsReqForm,
-      onmsgHandler: (event: MessageEvent) => void
-    ) => {
-      console.debug("WebSocket connecting ... ", url);
-      const socket = new WebSocket(url);
-      socket.onerror = (error: Event) => {
-        console.error("WebSocket Error:", error);
-      };
-      socket.onclose = () => {
-        console.debug("WebSocket closed.");
-      };
-      socket.onopen = () => {
-        console.debug(
-          "WebSocket connnection established. send request form.",
-          upbitWsReqForm
-        );
-        socket.send(JSON.stringify(upbitWsReqForm));
-      };
-      socket.onmessage = onmsgHandler;
-
-      return socket;
-    };
-
-    const socket = connect(
-      "wss://api.upbit.com/websocket/v1",
-      upbitWsReqForm,
-      onmsgHandler
-    );
-
-    return () => {
-      socket.close();
-    };
-  }, [market]);
+  useUpbitWebSocket(
+    "wss://api.upbit.com/websocket/v1",
+    upbitWsReqForm,
+    onmsgHandler,
+    [market]
+  );
 
   if (!coin) {
     return <div></div>;
