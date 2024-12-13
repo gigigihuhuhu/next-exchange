@@ -10,6 +10,7 @@ import { SettingsIcon } from "@/components/icons";
 import MiniChart from "@/components/ui/coin-info/lw-minichart";
 import { UpbitWsReqForm } from "@/hooks/useUpbitWebSocket";
 import { getDisplayAccTradePrice, getDisplayPrice } from "@/utils/currency";
+import Links from "@/components/ui/links/links";
 
 const CoinInfo = ({ market }: { market: string }) => {
   const [coin, setCoin] = useState<Coin | null>(null);
@@ -223,7 +224,7 @@ const CoinInfo = ({ market }: { market: string }) => {
           </div>
         </div>
         <div className={"absolute " + (activeTab === 1 ? "block" : "hidden")}>
-          <p>not yet implemented</p>
+          <Links></Links>
         </div>
       </div>
     </>

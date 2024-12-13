@@ -40,7 +40,7 @@ export default async function Exchange({
           <div className="bg-white h-[138px]">
             <CoinInfo market={JSON.stringify(coinInfoMarket)}></CoinInfo>
           </div>
-          <div className="bg-white h-[calc(100vh-218px)]">
+          <div className="bg-white min-h-[0px] h-[calc(100vh-218px)]">
             <LwWidget></LwWidget>
           </div>
         </div>
