@@ -1,23 +1,25 @@
-'use client';
-import { Market } from '@/model/market';
-import React, { useEffect, useRef, memo } from 'react';
+"use client";
+import { Market } from "@/model/market";
+import React, { useEffect, useRef, memo } from "react";
 
-function TradingViewWidget({market}:{market:string}) {
+function TradingViewWidget({ market }: { market: string }) {
   const container = useRef<HTMLDivElement>(null);
 
   const parsedMarket = Market.fromObject(JSON.parse(market));
-  useEffect(
-    () => {
-      if(container.current?.querySelector('script')) return;
+  useEffect(() => {
+    if (container.current?.querySelector("script")) return;
 
-      const script = document.createElement("script");
-      script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-      script.type = "text/javascript";
-      script.async = true;
-      script.innerHTML = `
+    const script = document.createElement("script");
+    script.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+    script.type = "text/javascript";
+    script.async = true;
+    script.innerHTML = `
         {
           "autosize": true,
-          "symbol": "UPBIT:${parsedMarket.coinCode()+parsedMarket.currencyType()}",
+          "symbol": "UPBIT:${
+            parsedMarket.coinCode() + parsedMarket.currencyType()
+          }",
           "timezone": "Asia/Seoul",
           "theme": "light",
           "style": "1",
@@ -29,12 +31,20 @@ function TradingViewWidget({market}:{market:string}) {
           "calendar": false,
           "support_host": "https://www.tradingview.com"
         }`;
-      container.current?.appendChild(script);
-    },[]);
+    container.current?.appendChild(script);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <div className="tradingview-widget-container" ref={container} style={{ height: "100%", width: "100%" }}>
-      <div className="tradingview-widget-container__widget" style={{ height: "calc(100% - 32px)", width: "100%" }}></div>
+    <div
+      className="tradingview-widget-container"
+      ref={container}
+      style={{ height: "100%", width: "100%" }}
+    >
+      <div
+        className="tradingview-widget-container__widget"
+        style={{ height: "calc(100% - 32px)", width: "100%" }}
+      ></div>
     </div>
   );
 }

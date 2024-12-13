@@ -3,7 +3,7 @@
 import { Market } from "@/model/market";
 import React, { useEffect, useRef, memo } from "react";
 
-function Minichart({market}:{market:string}) {
+function Minichart({ market }: { market: string }) {
   const container = useRef<HTMLDivElement>(null);
   const parsedMarket = Market.fromObject(JSON.parse(market));
 
@@ -21,7 +21,9 @@ function Minichart({market}:{market:string}) {
     script.async = true;
     script.innerHTML = `
               {
-        "symbol": "UPBIT:${parsedMarket.coinCode()+parsedMarket.currencyType()}",
+        "symbol": "UPBIT:${
+          parsedMarket.coinCode() + parsedMarket.currencyType()
+        }",
         "locale": "kr",
         "dateRange": "1M",
         "colorTheme": "light",
@@ -35,10 +37,11 @@ function Minichart({market}:{market:string}) {
 
     return () => {
       if (container.current) {
-        container.current.innerHTML = ""; // cleanup 스크립트 제거
+        container.current.innerHTML = "";
       }
     };
-  }, [market]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="h-[50px] w-[150px] overflow-hidden relative">
