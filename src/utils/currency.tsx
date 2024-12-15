@@ -36,7 +36,7 @@ export const getDisplayAccTradePrice = (
 export const getDisplayAccTradePriceByKRW = (
   price: number,
   currencyTypeCode: string,
-  BTCtoKRW: number = 1_4000_0000
+  BTCtoKRW: number
 ) => {
   switch (currencyTypeCode) {
     case "KRW":
@@ -69,7 +69,7 @@ export const getDisplayAccTradePriceByKRW = (
 export const getDisplayPriceByKRW = (
   price: number,
   currencyTypeCode: string,
-  BTCtoKRW: number = 1_4000_0000
+  BTCtoKRW: number
 ) => {
   return makeCommadNumber(
     getPrecisionString(
