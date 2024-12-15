@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import Image from "next/image";
 import { SettingsIcon, XIcon } from "@/components/icons";
 
@@ -8,6 +8,14 @@ export default function SearchBar({
   setSearchKeyword: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleClearInput = useCallback(() => {
+    if (inputRef.current) {
+      inputRef.current.value = ""; // input value 초기화
+      setSearchKeyword(""); // 상태 초기화
+      inputRef.current.blur(); // focus 해제
+    }
+  }, []);
 
   return (
     <div className="pl-3 pr-3 border-b border-gray-200">
@@ -20,9 +28,12 @@ export default function SearchBar({
             onChange={(e) => setSearchKeyword(e.target.value)}
             placeholder="코인명/심볼검색"
           />
-          <button className={"absolute right-[1px] top-[2px]"+
-            (inputRef.current?.value ? "" : " hidden")
-          }>
+          <button onClick={handleClearInput}
+            className={
+              "absolute right-[1px] top-[2px]" +
+              (inputRef.current?.value ? "" : " hidden")
+            }
+          >
             <XIcon></XIcon>
           </button>
         </div>
