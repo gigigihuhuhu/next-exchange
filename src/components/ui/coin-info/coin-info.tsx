@@ -21,10 +21,14 @@ const CoinInfo = ({ market }: { market: string }) => {
 
   const parsedMarket = Market.fromObject(JSON.parse(market));
   useEffect(() => {
-    setMarketInstance(parsedMarket);
     setCoin(coins?.findCoin(parsedMarket.market));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [market,coins]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coins]);
+
+  useEffect(() => {
+    setMarketInstance(parsedMarket);
+    setActiveTab(0);
+  }, [market]);
 
   if (!coin) {
     return <div></div>;
