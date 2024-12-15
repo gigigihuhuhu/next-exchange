@@ -14,6 +14,7 @@ import {
 import { useCoinData } from "@/context/coin-data-context";
 import Hangul from "hangul-js";
 import { useMemo } from "react";
+import Loading from "@/app/loading";
 
 export default function MarketGridCoins({
   markets,
@@ -24,15 +25,15 @@ export default function MarketGridCoins({
   currencyTypeCode: string;
   searchKeyword: string;
 }) {
-  const { coins, BTCtoKRW } = useCoinData();
+  const { coins, BTCtoKRW, isLoading } = useCoinData();
   const currMarket = useSearchParams().get("market");
-  
+
   const allMarkets = useMemo(() => {
     return Markets.fromObject(JSON.parse(markets).markets);
   }, [markets]);
   const displayMarkets = useMemo(() => {
     return allMarkets.findMarketByCurrencyType(currencyTypeCode);
-  }, [currencyTypeCode,allMarkets]);
+  }, [currencyTypeCode, allMarkets]);
 
   const isDisplay = useMemo(() => {
     return displayMarkets.reduce((acc, market) => {
@@ -49,6 +50,13 @@ export default function MarketGridCoins({
     }, {} as { [market: string]: boolean });
   }, [searchKeyword]);
 
+  if (!coins || isLoading) {
+    return (
+      <div className="mt-40">
+        <Loading></Loading>;
+      </div>
+    );
+  }
   return (
     <>
       {displayMarkets.map((market: Market, index) => {

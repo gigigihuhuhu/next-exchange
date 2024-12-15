@@ -142,7 +142,6 @@ export function FavoriteIcon() {
   );
 }
 
-
 export function AngleNextIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -153,6 +152,26 @@ export function AngleNextIcon(props: React.SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
     >
       <path d="M16 11C15.4477 11 15 11.4477 15 12C15 12.5523 15.4477 13 16 13V11ZM16.7072 12.7071C17.0977 12.3166 17.0977 11.6834 16.7072 11.2929L10.3432 4.92893C9.95272 4.53841 9.31956 4.53841 8.92903 4.92893C8.53851 5.31946 8.53851 5.95262 8.92903 6.34315L14.5859 12L8.92903 17.6569C8.53851 18.0474 8.53851 18.6805 8.92903 19.0711C9.31956 19.4616 9.95272 19.4616 10.3432 19.0711L16.7072 12.7071ZM16 13H16.0001V11H16V13Z" />
+    </svg>
+  );
+}
+
+export function LoadingIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      ></circle>
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      ></path>
     </svg>
   );
 }

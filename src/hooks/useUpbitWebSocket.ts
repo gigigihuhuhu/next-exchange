@@ -1,4 +1,4 @@
-import { DependencyList, useEffect } from "react";
+import { DependencyList, useEffect, useState } from "react";
 
 interface TicketField {
   ticket: string; // UUID
@@ -20,6 +20,8 @@ export const useUpbitWebSocket = (
   onmsgHandler: (event: MessageEvent) => void,
   deps: DependencyList | undefined
 ) => {
+  const [isLoading, setIsLoading] = useState(true); // Loading 상태 추가
+
   useEffect(() => {
     const connect = (
       url: string,
@@ -30,6 +32,12 @@ export const useUpbitWebSocket = (
       const socket = new WebSocket(url);
       socket.onerror = (error: Event) => {
         console.error("WebSocket Error:", error);
+
+        setIsLoading(true);
+        setTimeout(() => {
+          console.debug("Retrying WebSocket connection...");
+          connect(url, upbitWsReqForm, onmsgHandler); // 1초 후 재연결
+        }, 2000);
       };
       socket.onclose = () => {
         console.debug("WebSocket closed.");
@@ -40,15 +48,20 @@ export const useUpbitWebSocket = (
           upbitWsReqForm
         );
         socket.send(JSON.stringify(upbitWsReqForm));
+        setIsLoading(false);
       };
       socket.onmessage = onmsgHandler;
-      
+
       return socket;
     };
 
     const socket = connect(url, upbitWsReqForm, onmsgHandler);
 
-    return ()=>{socket.close()};
+    return () => {
+      socket.close();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
+
+  return isLoading;
 };

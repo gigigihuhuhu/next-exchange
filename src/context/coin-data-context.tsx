@@ -10,6 +10,7 @@ interface coinDataContextProps {
   coins: { [market: string]: Coin } | undefined;
   BTCtoKRW: number;
   coinByMarket: (market: string) => Coin | undefined;
+  isLoading: boolean;
 }
 
 const coinDataContext = createContext<coinDataContextProps | undefined>(
@@ -48,7 +49,7 @@ export const CoinDataProvider = ({
     }
   }, []);
 
-  useUpbitWebSocket(
+  const isLoading = useUpbitWebSocket(
     "wss://api.upbit.com/websocket/v1",
     upbitWsReqForm,
     onmsgHandler,
@@ -65,6 +66,7 @@ export const CoinDataProvider = ({
         coins,
         BTCtoKRW,
         coinByMarket,
+        isLoading
       }}
     >
       {children}

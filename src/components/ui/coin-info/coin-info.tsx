@@ -9,9 +9,10 @@ import MiniChart from "@/components/ui/coin-info/lw-minichart";
 import { getDisplayAccTradePrice, getDisplayPrice } from "@/utils/currency";
 import Links from "@/components/ui/links/links";
 import { useCoinData } from "@/context/coin-data-context";
+import Loading from "@/app/loading";
 
 const CoinInfo = ({ market }: { market: string }) => {
-  const { coinByMarket } = useCoinData();
+  const { coinByMarket, isLoading } = useCoinData();
   const [activeTab, setActiveTab] = useState<number>(0);
   const [marketInstance, setMarketInstance] = useState<Market>(
     Market.getDefaultMarket()
@@ -25,8 +26,8 @@ const CoinInfo = ({ market }: { market: string }) => {
   
   const coin = coinByMarket(marketInstance.market);
 
-  if (!coin) {
-    return <div></div>;
+  if (!coin || isLoading) {
+    return <Loading></Loading>;
   }
   return (
     <>
