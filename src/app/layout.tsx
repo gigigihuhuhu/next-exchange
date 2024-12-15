@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/ui/header/header";
 import Footer from "@/components/ui/footer/footer";
 import { AuthProvider } from "@/context/auth-context";
+import { CoinDataProvider } from "@/context/coin-data-context";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,7 +34,9 @@ export default function RootLayout({
       >
         <AuthProvider>
           <Header></Header>
-          <div className="pt-16 min-h-[100vh]">{children}</div>
+          <CoinDataProvider>
+            <div className="pt-16 min-h-[100vh]">{children}</div>
+          </CoinDataProvider>
         </AuthProvider>
         <Footer></Footer>
       </body>

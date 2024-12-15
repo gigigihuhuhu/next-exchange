@@ -4,7 +4,6 @@ import Notice from "@/components/ui/coin-info/notice";
 
 import { Market, Markets } from "@/model/market";
 import MarketGrid from "@/components/ui/market-grid/market-grid";
-import { CoinDataProvider } from "@/context/coin-data-context";
 
 async function fetchMarkets() {
   const res = await fetch("https://api.upbit.com/v1/market/all", {
@@ -29,28 +28,25 @@ export default async function Exchange({
   const allMarkets = Markets.fromDTO(await fetchMarkets());
 
   const coinInfoMarket =
-    allMarkets.findMarket(
-      marketParam ?? Market.getDefaultMarket().market
-    ) ?? Market.getDefaultMarket();
+    allMarkets.findMarket(marketParam ?? Market.getDefaultMarket().market) ??
+    Market.getDefaultMarket();
 
   return (
     <div className="p-2 flex flex-row gap-2">
-      <CoinDataProvider markets={JSON.stringify(allMarkets)}>
-        <div className="min-w-[900px] flex flex-col gap-2 flex-grow">
-          <Notice className="bg-white h-[32px]"></Notice>
-          <div>
-            <div className="bg-white h-[138px]">
-              <CoinInfo market={JSON.stringify(coinInfoMarket)}></CoinInfo>
-            </div>
-            <div className="bg-white min-h-[0px] h-[calc(100vh-218px)]">
-              <LwWidget market={JSON.stringify(coinInfoMarket)}></LwWidget>
-            </div>
+      <div className="min-w-[900px] flex flex-col gap-2 flex-grow">
+        <Notice className="bg-white h-[32px]"></Notice>
+        <div>
+          <div className="bg-white h-[138px]">
+            <CoinInfo market={JSON.stringify(coinInfoMarket)}></CoinInfo>
+          </div>
+          <div className="bg-white min-h-[0px] h-[calc(100vh-218px)]">
+            <LwWidget market={JSON.stringify(coinInfoMarket)}></LwWidget>
           </div>
         </div>
-        <div className="min-w-[400px] max-w-[400px] overflow-y-scroll bg-white">
-          <MarketGrid markets={JSON.stringify(allMarkets)}></MarketGrid>
-        </div>
-      </CoinDataProvider>
+      </div>
+      <div className="min-w-[400px] max-w-[400px] overflow-y-scroll bg-white">
+        <MarketGrid markets={JSON.stringify(allMarkets)}></MarketGrid>
+      </div>
     </div>
   );
 }

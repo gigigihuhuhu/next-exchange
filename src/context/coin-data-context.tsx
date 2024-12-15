@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { UpbitWsReqForm, useUpbitWebSocket } from "@/hooks/useUpbitWebSocket";
 import { Coin, Coins } from "@/model/coin";
 import { createContext, useContext, useState } from "react";
-import { Markets } from "@/model/market";
+import { markets } from "@/data/sample-data";
 
 interface coinDataContextProps {
   coins: Coins | null;
@@ -17,10 +17,8 @@ const coinDataContext = createContext<coinDataContextProps | undefined>(
 
 export const CoinDataProvider = ({
   children,
-  markets,
 }: {
   children: React.ReactNode;
-  markets: string;
 }) => {
   const [coins, setCoins] = useState<Coins>(new Coins({}));
   const [BTCtoKRW, setBTCtoKRW] = useState<number>(0);
@@ -28,7 +26,7 @@ export const CoinDataProvider = ({
     { ticket: uuidv4() },
     {
       type: "ticker",
-      codes: Markets.fromObject(JSON.parse(markets).markets).getMarketCodes(),
+      codes: markets,
     },
   ];
 
