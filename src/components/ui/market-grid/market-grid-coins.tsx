@@ -1,107 +1,35 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Market, Markets } from "@/model/market";
-import { Coin, Coins } from "@/model/coin";
+import { Coin } from "@/model/coin";
 import { FavoriteIcon } from "@/components/icons";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { UpbitWsReqForm, useUpbitWebSocket } from "@/hooks/useUpbitWebSocket";
-import { v4 as uuidv4 } from "uuid";
 import MarketGridTradePrice from "./market-grid-trade-price";
 import {
   getDisplayAccTradePrice,
   getDisplayAccTradePriceByKRW,
   getDisplayPrice,
 } from "@/utils/currency";
+import { useCoinData } from "@/context/coin-data-context";
 
 export default function MarketGridCoins({
   markets,
   currencyTypeCode,
-  BTCtoKRW,
-  setBTCtoKRW,
 }: {
   markets: string;
   currencyTypeCode: string;
-  BTCtoKRW: number | undefined;
-  setBTCtoKRW: React.Dispatch<React.SetStateAction<number | undefined>>;
 }) {
-  const [coins, setCoins] = useState<Coins | null>(null);
+  const { coins, BTCtoKRW } = useCoinData();
   const currMarket = useSearchParams().get("market");
   const allMarkets = Markets.fromObject(JSON.parse(markets).markets);
 
-  useEffect(() => {
-    const fetchCoins = async () => {
-      const res = await fetch(
-        `https://api.upbit.com/v1/ticker/all?quote_currencies=${currencyTypeCode}`
-      );
-      const coinData = Coins.fromDTO(await res.json());
-      setCoins(coinData);
-      
-      if(currencyTypeCode === "KRW"){
-        setBTCtoKRW(coinData.findCoin("KRW-BTC").tradePrice);
-      }
-    };
-
-    fetchCoins();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const upbitWsReqForm: UpbitWsReqForm = [
-    { ticket: uuidv4() },
-    {
-      type: "ticker",
-      codes: allMarkets
-        .findMarketByCurrencyType(currencyTypeCode)
-        .map((a) => a.marketCode),
-      is_only_realtime: true,
-    },
-  ];
-
-  const onmsgHandlerKRW = (event: MessageEvent) => {
-    try {
-      event.data.text().then((data: string) => {
-        const newCoin: Coin | undefined = Coin.fromWsDTO(JSON.parse(data));
-        setCoins((prevCoins) => {
-          if (!prevCoins) return prevCoins;
-          return prevCoins.updateCoin(newCoin);
-        });
-        if(newCoin.market === "KRW-BTC"){
-          setBTCtoKRW(newCoin.tradePrice)
-        }
-      });
-    } catch (error) {
-      console.error("Error during data parse:", error);
-    }
-  };
-
-  const onmsgHandlerElse = (event: MessageEvent) => {
-    try {
-      event.data.text().then((data: string) => {
-        const newCoin: Coin | undefined = Coin.fromWsDTO(JSON.parse(data));
-        setCoins((prevCoins) => {
-          if (!prevCoins) return prevCoins;
-          return prevCoins.updateCoin(newCoin);
-        });
-      });
-    } catch (error) {
-      console.error("Error during data parse:", error);
-    }
-  };
-
-  useUpbitWebSocket(
-    "wss://api.upbit.com/websocket/v1",
-    upbitWsReqForm,
-    currencyTypeCode === "KRW" ? onmsgHandlerKRW : onmsgHandlerElse,
-    []
-  );
   return (
     <>
       {allMarkets
         .findMarketByCurrencyType(currencyTypeCode)
         .map((market: Market, index) => {
-          const coin: Coin =
-            coins?.findCoin(market.marketCode) ?? Coin.getDefaultCoin();
+          const coin: Coin = coins?.findCoin(market.marketCode) ?? new Coin();
           return (
             <Link key={index} href={`/exchange?market=${market.marketCode}`}>
               <div
@@ -137,7 +65,7 @@ export default function MarketGridCoins({
                 </div>
                 <MarketGridTradePrice
                   coinChange={coin.change}
-                  coinTradePrice={coin.tradePrice}
+                  coinTradePrice={coin.trade_price}
                   currencyTypeCode={currencyTypeCode}
                   BTCtoKRW={BTCtoKRW}
                 />
@@ -149,13 +77,16 @@ export default function MarketGridCoins({
                   }
                 >
                   <h3>{`${
-                    (coin.signedChangeRate > 0 ? "+" : "") +
-                    (coin.signedChangeRate * 100).toFixed(2)
+                    (coin.signed_change_rate > 0 ? "+" : "") +
+                    (coin.signed_change_rate * 100).toFixed(2)
                   }%`}</h3>
                   <h3
                     className={currencyTypeCode === "KRW" ? "block" : "hidden"}
                   >
-                    {getDisplayPrice(coin.signedChangePrice, currencyTypeCode)}
+                    {getDisplayPrice(
+                      coin.signed_change_price,
+                      currencyTypeCode
+                    )}
                   </h3>
                 </div>
 
@@ -167,13 +98,13 @@ export default function MarketGridCoins({
                     }
                   >
                     {getDisplayAccTradePrice(
-                      coin.accTradePrice24h,
+                      coin.acc_trade_price_24h,
                       currencyTypeCode
                     )}
                   </h3>
                   <div className="text-[0.7rem] flex flex-row justify-end gap-1">
                     {getDisplayAccTradePriceByKRW(
-                      coin.accTradePrice24h,
+                      coin.acc_trade_price_24h,
                       currencyTypeCode,
                       BTCtoKRW
                     )}

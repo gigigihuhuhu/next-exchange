@@ -5,7 +5,6 @@ import MarketGridCoins from "./market-grid-coins";
 
 export default function MarketGrid({ markets }: { markets: string }) {
   const [activeCurrencyIdx, setActiveCurrencyIdx] = useState(0);
-  const [BTCtoKRW, setBTCtoKRW] = useState<number | undefined>(undefined);
 
   const currencyTypes = [
     { codeName: "KRW", koreanName: "원화", englishName: "KRW" },
@@ -67,8 +66,6 @@ export default function MarketGrid({ markets }: { markets: string }) {
               <MarketGridCoins
                 markets={markets}
                 currencyTypeCode={currencyType.codeName}
-                BTCtoKRW={BTCtoKRW}
-                setBTCtoKRW={setBTCtoKRW}
               ></MarketGridCoins>
             </div>
           );

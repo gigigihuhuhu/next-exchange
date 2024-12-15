@@ -1,6 +1,5 @@
 "use client";
 
-import { v4 as uuidv4 } from "uuid";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -8,12 +7,13 @@ import { Coin } from "@/model/coin";
 import { Market } from "@/model/market";
 import { SettingsIcon } from "@/components/icons";
 import MiniChart from "@/components/ui/coin-info/lw-minichart";
-import { UpbitWsReqForm, useUpbitWebSocket } from "@/hooks/useUpbitWebSocket";
 import { getDisplayAccTradePrice, getDisplayPrice } from "@/utils/currency";
 import Links from "@/components/ui/links/links";
+import { useCoinData } from "@/context/coin-data-context";
 
 const CoinInfo = ({ market }: { market: string }) => {
-  const [coin, setCoin] = useState<Coin | null>(null);
+  const { coins } = useCoinData();
+  const [coin, setCoin] = useState<Coin>();
   const [activeTab, setActiveTab] = useState<number>(0);
   const [marketInstance, setMarketInstance] = useState<Market>(
     Market.getDefaultMarket()
@@ -22,43 +22,9 @@ const CoinInfo = ({ market }: { market: string }) => {
   const parsedMarket = Market.fromObject(JSON.parse(market));
   useEffect(() => {
     setMarketInstance(parsedMarket);
-    const fetchData = async () => {
-      const res = await fetch(
-        `https://api.upbit.com/v1/ticker?markets=${parsedMarket.marketCode}`
-      );
-      const result = await res.json();
-      setCoin(Coin.fromRestDTO(result[0]));
-    };
-
-    fetchData();
+    setCoin(coins?.findCoin(parsedMarket.marketCode));
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [market]);
-
-  const upbitWsReqForm: UpbitWsReqForm = [
-    { ticket: uuidv4() },
-    {
-      type: "ticker",
-      codes: [parsedMarket.marketCode],
-      is_only_realtime: true,
-    },
-  ];
-  const onmsgHandler = (event: MessageEvent) => {
-    try {
-      event.data.text().then((data: string) => {
-        const newCoin: Coin | undefined = Coin.fromWsDTO(JSON.parse(data));
-        setCoin(newCoin);
-      });
-    } catch (error) {
-      console.error("Error during data parse:", error);
-    }
-  };
-
-  useUpbitWebSocket(
-    "wss://api.upbit.com/websocket/v1",
-    upbitWsReqForm,
-    onmsgHandler,
-    [market]
-  );
+  }, [market,coins]);
 
   if (!coin) {
     return <div></div>;
@@ -127,20 +93,20 @@ const CoinInfo = ({ market }: { market: string }) => {
             >
               <div>
                 <h1 className="text-3xl font-bold">
-                  {getDisplayPrice(coin.tradePrice, coin.currencyType())}
+                  {getDisplayPrice(coin.trade_price, coin.currencyType())}
                 </h1>
                 <h3 className="text-sm">{coin.currencyType()}</h3>
               </div>
               <div className="flex flex-row items-center font-semibold">
                 <h3>{`${
-                  (coin.signedChangeRate > 0 ? "+" : "") +
-                  (coin.signedChangeRate * 100).toFixed(2)
+                  (coin.signed_change_rate > 0 ? "+" : "") +
+                  (coin.signed_change_rate * 100).toFixed(2)
                 }%`}</h3>
                 <h3>
                   {(coin.change == "FALL" ? "▼" : "") +
                     (coin.change == "RISE" ? "▲" : "") +
                     getDisplayPrice(
-                      coin.signedChangePrice,
+                      coin.signed_change_price,
                       coin.currencyType()
                     )}
                 </h3>
@@ -153,14 +119,14 @@ const CoinInfo = ({ market }: { market: string }) => {
               <div className="">
                 <h3 className="text-xs text-gray-700">고가</h3>
                 <h3 className="font-semibold text-sm text-red-600">
-                  {getDisplayPrice(coin.highPrice, coin.currencyType())}
+                  {getDisplayPrice(coin.high_price, coin.currencyType())}
                 </h3>
               </div>
               <hr className="my-2" />
               <div>
                 <h3 className="text-xs text-gray-700">저가</h3>
                 <h3 className="font-semibold text-sm text-green-700">
-                  {getDisplayPrice(coin.lowPrice, coin.currencyType())}
+                  {getDisplayPrice(coin.low_price, coin.currencyType())}
                 </h3>
               </div>
             </div>
@@ -170,7 +136,7 @@ const CoinInfo = ({ market }: { market: string }) => {
                 <h3 className="text-xs text-gray-700">거래량(24h)</h3>
                 <div className="flex flex-row gap-1 items-center">
                   <h3 className="text-sm">
-                    {coin.accTradeVolume24h.toLocaleString()}
+                    {coin.acc_trade_volume_24h.toLocaleString()}
                   </h3>
                   <h4 className="text-xs text-gray-500">{coin.coinCode()}</h4>
                 </div>
@@ -183,7 +149,7 @@ const CoinInfo = ({ market }: { market: string }) => {
                 <div className="text-[0.7rem] flex flex-row gap-1 items-center">
                   <h3>
                     {getDisplayAccTradePrice(
-                      coin.accTradePrice24h,
+                      coin.acc_trade_price_24h,
                       coin.currencyType()
                     )}
                   </h3>
