@@ -30,7 +30,7 @@ export default async function Exchange({
 
   const coinInfoMarket =
     allMarkets.findMarket(
-      marketParam ?? Market.getDefaultMarket().marketCode
+      marketParam ?? Market.getDefaultMarket().market
     ) ?? Market.getDefaultMarket();
 
   return (

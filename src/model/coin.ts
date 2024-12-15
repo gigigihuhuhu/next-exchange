@@ -123,8 +123,8 @@ export class Coins {
     return new Coins(newCoins);
   }
 
-  findCoin(marketCode: string) {
-    return this.coins[marketCode];
+  findCoin(market: string) {
+    return this.coins[market];
   }
 
   updateCoin(updateCoin: Coin) {

@@ -22,7 +22,7 @@ const CoinInfo = ({ market }: { market: string }) => {
   const parsedMarket = Market.fromObject(JSON.parse(market));
   useEffect(() => {
     setMarketInstance(parsedMarket);
-    setCoin(coins?.findCoin(parsedMarket.marketCode));
+    setCoin(coins?.findCoin(parsedMarket.market));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [market,coins]);
 
@@ -43,7 +43,7 @@ const CoinInfo = ({ market }: { market: string }) => {
             blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mPsqQcAAZ0BDTSBuAQAAAAASUVORK5CYII="
             priority
           ></Image>
-          <h2 className="ml-2 text-xl font-bold">{`${marketInstance.koreanName}`}</h2>
+          <h2 className="ml-2 text-xl font-bold">{`${marketInstance.korean_name}`}</h2>
           <h3 className="ml-1 text-xs text-gray-500 font-medium">{`${coin.coinCode()}/${coin.currencyType()}`}</h3>
         </div>
 

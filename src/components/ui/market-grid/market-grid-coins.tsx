@@ -29,13 +29,13 @@ export default function MarketGridCoins({
       {allMarkets
         .findMarketByCurrencyType(currencyTypeCode)
         .map((market: Market, index) => {
-          const coin: Coin = coins?.findCoin(market.marketCode) ?? new Coin();
+          const coin: Coin = coins?.findCoin(market.market) ?? new Coin();
           return (
-            <Link key={index} href={`/exchange?market=${market.marketCode}`}>
+            <Link key={index} href={`/exchange?market=${market.market}`}>
               <div
                 className={
                   "flex flex-row items-center px-3 border-t h-[45px] hover:bg-gray-100 w-full " +
-                  (currMarket === market.marketCode ? " bg-gray-100" : "")
+                  (currMarket === market.market ? " bg-gray-100" : "")
                 }
               >
                 <div className="flex flex-row items-center justify-start gap-1 basis-[30px]">
@@ -57,17 +57,16 @@ export default function MarketGridCoins({
                 </div>
                 <div className="text-left basis-[98px]">
                   <h3 className="text-[0.75rem] leading-[0.9rem] font-semibold">
-                    {market.koreanName}
+                    {market.korean_name}
                   </h3>
                   <h3 className="text-[0.65rem] leading-[0.9rem] text-gray-500">
-                    {market.marketCode}
+                    {market.market}
                   </h3>
                 </div>
                 <MarketGridTradePrice
                   coinChange={coin.change}
                   coinTradePrice={coin.trade_price}
                   currencyTypeCode={currencyTypeCode}
-                  BTCtoKRW={BTCtoKRW}
                 />
                 <div
                   className={

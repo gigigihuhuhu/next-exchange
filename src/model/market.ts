@@ -6,16 +6,16 @@ export interface MarketDTO {
 
 export class Market {
   constructor(
-    public marketCode: string, 
-    public koreanName: string, 
-    public englishName: string) {}
+    public market: string, 
+    public korean_name: string, 
+    public english_name: string) {}
 
   static fromDTO(data: MarketDTO) {
     return new Market(data.market,data.korean_name,data.english_name);
   }
 
   static fromObject(data: Market) {
-    return new Market(data.marketCode,data.koreanName,data.englishName);
+    return new Market(data.market,data.korean_name,data.english_name);
   }
 
   static getDefaultMarket() {
@@ -23,11 +23,11 @@ export class Market {
   }
 
   currencyType() {
-    return this.marketCode.split("-")[0];
+    return this.market.split("-")[0];
   }
 
   coinCode() {
-    return this.marketCode.split("-")[1];
+    return this.market.split("-")[1];
   }
 }
 
@@ -43,7 +43,7 @@ export class Markets {
   }
 
   findMarket(marketCode: string) {
-    return this.markets.find((a) => a.marketCode === marketCode);
+    return this.markets.find((a) => a.market === marketCode);
   }
 
   findMarketByCurrencyType(currencyType : string) {
@@ -51,6 +51,6 @@ export class Markets {
   }
 
   getMarketCodes(){
-    return this.markets.map((a) => a.marketCode);
+    return this.markets.map((a) => a.market);
   }
 }

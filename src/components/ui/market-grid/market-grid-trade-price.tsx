@@ -2,51 +2,54 @@ import useDidMountEffect from "@/hooks/useDidMountEffect";
 import { useRef, useState } from "react";
 import style from "./market-grid.module.css";
 import { getDisplayPrice, getDisplayPriceByKRW } from "@/utils/currency";
+import { useCoinData } from "@/context/coin-data-context";
 
 export default function MarketGridTradePrice({
   coinChange,
   coinTradePrice,
   currencyTypeCode,
-  BTCtoKRW,
 }: {
   coinChange: string;
   coinTradePrice: number;
   currencyTypeCode: string;
-  BTCtoKRW: number | undefined;
 }) {
   const [displayPrice, setDisplayPrice] = useState<string>("-");
   const [price, setPrice] = useState<number>(0);
+  const { BTCtoKRW } = useCoinData();
   const containerRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  useDidMountEffect(() => {
-    setDisplayPrice((prevPrice) => {
-      if (prevPrice === "-") {
-        setPrice(coinTradePrice);
-        return getDisplayPrice(coinTradePrice, currencyTypeCode);
-      }
+  useDidMountEffect(
+    () => {
+      setDisplayPrice((prevPrice) => {
+        if (prevPrice === "-") {
+          setPrice(coinTradePrice);
+          return getDisplayPrice(coinTradePrice, currencyTypeCode);
+        }
 
-      containerRef.current?.classList.remove(style["price-change-rise"]);
-      containerRef.current?.classList.remove(style["price-change-fall"]);
-      void containerRef.current?.offsetWidth;
-      if (price < coinTradePrice) {
-        containerRef.current?.classList.add(style["price-change-rise"]);
-      } else if (price > coinTradePrice) {
-        containerRef.current?.classList.add(style["price-change-fall"]);
-      }
-
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      timeoutRef.current = setTimeout(() => {
         containerRef.current?.classList.remove(style["price-change-rise"]);
         containerRef.current?.classList.remove(style["price-change-fall"]);
-      }, 1000);
+        void containerRef.current?.offsetWidth;
+        if (price < coinTradePrice) {
+          containerRef.current?.classList.add(style["price-change-rise"]);
+        } else if (price > coinTradePrice) {
+          containerRef.current?.classList.add(style["price-change-fall"]);
+        }
 
-      setPrice(coinTradePrice);
-      return getDisplayPrice(coinTradePrice, currencyTypeCode);
-    });
-  }, [coinTradePrice]);
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+        timeoutRef.current = setTimeout(() => {
+          containerRef.current?.classList.remove(style["price-change-rise"]);
+          containerRef.current?.classList.remove(style["price-change-fall"]);
+        }, 1000);
+
+        setPrice(coinTradePrice);
+        return getDisplayPrice(coinTradePrice, currencyTypeCode);
+      });
+    },
+    [coinTradePrice]
+  );
 
   return (
     <div
