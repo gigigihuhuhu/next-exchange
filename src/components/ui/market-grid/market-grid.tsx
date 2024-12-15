@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import MarketGridCoins from "./market-grid-coins";
+import SearchBar from "./search-bar";
 
 export default function MarketGrid({ markets }: { markets: string }) {
   const [activeCurrencyIdx, setActiveCurrencyIdx] = useState(0);
+  const [searchKeyword, setSearchKeyword] = useState("");
 
   const currencyTypes = [
     { codeName: "KRW", koreanName: "원화", englishName: "KRW" },
@@ -15,6 +17,9 @@ export default function MarketGrid({ markets }: { markets: string }) {
   return (
     <>
       <div className="sticky top-0 bg-white z-[5]">
+        <>
+          <SearchBar setSearchKeyword={setSearchKeyword}></SearchBar>
+        </>
         <div className="h-[45px] flex flex-row items-end justify-between *:w-full *:font-semibold *:py-1 *:transition-colors *:duration-200">
           {currencyTypes.map((currencyType, index) => {
             return (
@@ -23,7 +28,8 @@ export default function MarketGrid({ markets }: { markets: string }) {
                 className={
                   (activeCurrencyIdx === index
                     ? "text-blue-600 !border-blue-600"
-                    : "hover:border-gray-400") + " text-sm border-b-4 border-transparent h-full box-border"
+                    : "hover:border-gray-400") +
+                  " text-sm border-b-4 border-transparent h-full box-border"
                 }
                 onClick={() => setActiveCurrencyIdx(index)}
               >
@@ -66,6 +72,7 @@ export default function MarketGrid({ markets }: { markets: string }) {
               <MarketGridCoins
                 markets={markets}
                 currencyTypeCode={currencyType.codeName}
+                searchKeyword={searchKeyword}
               ></MarketGridCoins>
             </div>
           );

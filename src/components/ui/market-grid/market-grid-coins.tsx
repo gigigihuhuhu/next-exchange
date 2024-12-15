@@ -12,18 +12,29 @@ import {
   getDisplayPrice,
 } from "@/utils/currency";
 import { useCoinData } from "@/context/coin-data-context";
+import { useEffect } from "react";
 
 export default function MarketGridCoins({
   markets,
   currencyTypeCode,
+  searchKeyword,
 }: {
   markets: string;
   currencyTypeCode: string;
+  searchKeyword: string;
 }) {
   const { coins, BTCtoKRW } = useCoinData();
   const currMarket = useSearchParams().get("market");
   const allMarkets = Markets.fromObject(JSON.parse(markets).markets);
   const displayMarkets = allMarkets.findMarketByCurrencyType(currencyTypeCode);
+
+  const isDisplay = (market: Market) => {
+    return (
+      market.korean_name.includes(searchKeyword) ||
+      market.market.includes(searchKeyword) ||
+      market.english_name.includes(searchKeyword)
+    );
+  }
   return (
     <>
       {displayMarkets.map((market: Market, index) => {
@@ -34,6 +45,7 @@ export default function MarketGridCoins({
               className={
                 "flex flex-row items-center px-3 border-t h-[45px] hover:bg-gray-100 w-full " +
                 (currMarket === market.market ? " bg-gray-100" : "")
+                + (isDisplay(market) ? "" : " hidden")
               }
             >
               <div className="flex flex-row items-center justify-start gap-1 basis-[30px]">
