@@ -17,9 +17,7 @@ export default function MarketGrid({ markets }: { markets: string }) {
   return (
     <>
       <div className="sticky top-0 bg-white z-[5]">
-        <>
-          <SearchBar setSearchKeyword={setSearchKeyword}></SearchBar>
-        </>
+        <SearchBar setSearchKeyword={setSearchKeyword}></SearchBar>
         <div className="h-[45px] flex flex-row items-end justify-between *:w-full *:font-semibold *:py-1 *:transition-colors *:duration-200">
           {currencyTypes.map((currencyType, index) => {
             return (

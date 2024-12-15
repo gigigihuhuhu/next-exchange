@@ -21,34 +21,34 @@ export const useUpbitWebSocket = (
   deps: DependencyList | undefined
 ) => {
   useEffect(() => {
+    const connect = (
+      url: string,
+      upbitWsReqForm: UpbitWsReqForm,
+      onmsgHandler: (event: MessageEvent) => void
+    ) => {
+      console.debug("WebSocket connecting ... ", url);
+      const socket = new WebSocket(url);
+      socket.onerror = (error: Event) => {
+        console.error("WebSocket Error:", error);
+      };
+      socket.onclose = () => {
+        console.debug("WebSocket closed.");
+      };
+      socket.onopen = () => {
+        console.debug(
+          "WebSocket connnection established. send request form.",
+          upbitWsReqForm
+        );
+        socket.send(JSON.stringify(upbitWsReqForm));
+      };
+      socket.onmessage = onmsgHandler;
+      
+      return socket;
+    };
+
     const socket = connect(url, upbitWsReqForm, onmsgHandler);
 
     return ()=>{socket.close()};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
-};
-
-const connect = (
-  url: string,
-  upbitWsReqForm: UpbitWsReqForm,
-  onmsgHandler: (event: MessageEvent) => void
-) => {
-  console.debug("WebSocket connecting ... ", url);
-  const socket = new WebSocket(url);
-  socket.onerror = (error: Event) => {
-    console.error("WebSocket Error:", error);
-  };
-  socket.onclose = () => {
-    console.debug("WebSocket closed.");
-  };
-  socket.onopen = () => {
-    console.debug(
-      "WebSocket connnection established. send request form.",
-      upbitWsReqForm
-    );
-    socket.send(JSON.stringify(upbitWsReqForm));
-  };
-  socket.onmessage = onmsgHandler;
-  
-  return socket;
 };

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "hangul-js": "^0.2.6",
     "keycloak-js": "^26.0.7",
     "lightweight-charts": "^4.2.2",
     "next": "15.0.4",

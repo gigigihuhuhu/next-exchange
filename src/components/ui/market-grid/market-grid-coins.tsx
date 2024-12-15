@@ -12,7 +12,8 @@ import {
   getDisplayPrice,
 } from "@/utils/currency";
 import { useCoinData } from "@/context/coin-data-context";
-import { useEffect } from "react";
+import Hangul from "hangul-js";
+import { useMemo } from "react";
 
 export default function MarketGridCoins({
   markets,
@@ -25,27 +26,41 @@ export default function MarketGridCoins({
 }) {
   const { coins, BTCtoKRW } = useCoinData();
   const currMarket = useSearchParams().get("market");
-  const allMarkets = Markets.fromObject(JSON.parse(markets).markets);
-  const displayMarkets = allMarkets.findMarketByCurrencyType(currencyTypeCode);
+  
+  const allMarkets = useMemo(() => {
+    return Markets.fromObject(JSON.parse(markets).markets);
+  }, [markets]);
+  const displayMarkets = useMemo(() => {
+    return allMarkets.findMarketByCurrencyType(currencyTypeCode);
+  }, [currencyTypeCode,allMarkets]);
 
-  const isDisplay = (market: Market) => {
-    return (
-      market.korean_name.includes(searchKeyword) ||
-      market.market.includes(searchKeyword) ||
-      market.english_name.includes(searchKeyword)
-    );
-  }
+  const isDisplay = useMemo(() => {
+    return displayMarkets.reduce((acc, market) => {
+      const searchInitials = Hangul.disassemble(searchKeyword).join("");
+      const koreanNames = Hangul.disassemble(market.korean_name).join("");
+      const regex = new RegExp(searchKeyword.split("").join(".*"), "i");
+      const isMatch =
+        koreanNames.includes(searchInitials) ||
+        regex.test(market.market) ||
+        regex.test(market.english_name);
+
+      acc[market.market] = isMatch;
+      return acc;
+    }, {} as { [market: string]: boolean });
+  }, [searchKeyword]);
+
   return (
     <>
       {displayMarkets.map((market: Market, index) => {
-        const coin: Coin = coins?.findCoin(market.market) ?? new Coin();
+        const coin = coins ? coins[market.market] : new Coin();
+        if (!coin) return null;
         return (
           <Link key={index} href={`/exchange?market=${market.market}`}>
             <div
               className={
                 "flex flex-row items-center px-3 border-t h-[45px] hover:bg-gray-100 w-full " +
-                (currMarket === market.market ? " bg-gray-100" : "")
-                + (isDisplay(market) ? "" : " hidden")
+                (currMarket === market.market ? " bg-gray-100" : "") +
+                (isDisplay[market.market] ? "" : " hidden")
               }
             >
               <div className="flex flex-row items-center justify-start gap-1 basis-[30px]">

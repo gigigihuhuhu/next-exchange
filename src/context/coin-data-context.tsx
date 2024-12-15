@@ -2,13 +2,14 @@
 
 import { v4 as uuidv4 } from "uuid";
 import { UpbitWsReqForm, useUpbitWebSocket } from "@/hooks/useUpbitWebSocket";
-import { Coin, Coins } from "@/model/coin";
-import { createContext, useContext, useState } from "react";
+import { Coin } from "@/model/coin";
+import { createContext, useContext, useState, useCallback } from "react";
 import { markets } from "@/data/sample-data";
 
 interface coinDataContextProps {
-  coins: Coins | null;
+  coins: { [market: string]: Coin } | undefined;
   BTCtoKRW: number;
+  coinByMarket: (market: string) => Coin | undefined;
 }
 
 const coinDataContext = createContext<coinDataContextProps | undefined>(
@@ -20,24 +21,24 @@ export const CoinDataProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [coins, setCoins] = useState<Coins>(new Coins({}));
+  const [coins, setCoins] = useState<{ [market: string]: Coin }>();
   const [BTCtoKRW, setBTCtoKRW] = useState<number>(0);
-  const upbitWsReqForm: UpbitWsReqForm = [
+  const [upbitWsReqForm] = useState<UpbitWsReqForm>([
     { ticket: uuidv4() },
     {
       type: "ticker",
       codes: markets,
     },
-  ];
+  ]);
 
-  const onmsgHandler = (event: MessageEvent) => {
+  const onmsgHandler = useCallback((event: MessageEvent) => {
     try {
       event.data.text().then((data: string) => {
         const newCoin = Coin.fromWsDTO(JSON.parse(data));
         setCoins((prevCoins) => {
-          return prevCoins.updateCoin(newCoin);
+          return { ...prevCoins, [newCoin.market]: newCoin };
         });
-  
+
         if (newCoin.market === "KRW-BTC") {
           setBTCtoKRW(newCoin.trade_price);
         }
@@ -45,7 +46,7 @@ export const CoinDataProvider = ({
     } catch (error) {
       console.error("Error during data parse:", error);
     }
-  };
+  }, []);
 
   useUpbitWebSocket(
     "wss://api.upbit.com/websocket/v1",
@@ -54,11 +55,16 @@ export const CoinDataProvider = ({
     []
   );
 
+  const coinByMarket = (market: string) => {
+    return coins ? coins[market] : undefined;
+  };
+
   return (
     <coinDataContext.Provider
       value={{
         coins,
         BTCtoKRW,
+        coinByMarket,
       }}
     >
       {children}

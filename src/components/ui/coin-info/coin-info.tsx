@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import Image from "next/image";
 
-import { Coin } from "@/model/coin";
 import { Market } from "@/model/market";
 import { SettingsIcon } from "@/components/icons";
 import MiniChart from "@/components/ui/coin-info/lw-minichart";
@@ -12,28 +11,23 @@ import Links from "@/components/ui/links/links";
 import { useCoinData } from "@/context/coin-data-context";
 
 const CoinInfo = ({ market }: { market: string }) => {
-  const { coins } = useCoinData();
-  const [coin, setCoin] = useState<Coin>();
+  const { coinByMarket } = useCoinData();
   const [activeTab, setActiveTab] = useState<number>(0);
   const [marketInstance, setMarketInstance] = useState<Market>(
     Market.getDefaultMarket()
   );
 
-  const parsedMarket = Market.fromObject(JSON.parse(market));
   useEffect(() => {
-    setCoin(coins?.findCoin(parsedMarket.market));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coins]);
-
-  useEffect(() => {
+    const parsedMarket = Market.fromObject(JSON.parse(market));
     setMarketInstance(parsedMarket);
     setActiveTab(0);
   }, [market]);
+  
+  const coin = coinByMarket(marketInstance.market);
 
   if (!coin) {
     return <div></div>;
   }
-
   return (
     <>
       <div className="px-4 flex flex-row items-center justify-between border-b border-solid border-gray-200">
@@ -171,4 +165,4 @@ const CoinInfo = ({ market }: { market: string }) => {
   );
 };
 
-export default CoinInfo;
+export default memo(CoinInfo);
