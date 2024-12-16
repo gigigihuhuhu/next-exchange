@@ -23,11 +23,20 @@ const CoinInfo = ({ market }: { market: string }) => {
     setMarketInstance(parsedMarket);
     setActiveTab(0);
   }, [market]);
-  
+
   const coin = coinByMarket(marketInstance.market);
 
   if (!coin || isLoading) {
-    return <Loading></Loading>;
+    return (
+      <div className="w-full h-full flex flex-col justify-center items-center gap-2">
+        <Loading></Loading>
+        {isLoading && (
+          <div className="text-gray-500 text-sm">
+            업비트 Open API 정책으로 인한 대기중...(rate limit : 10sec)
+          </div>
+        )}
+      </div>
+    );
   }
   return (
     <>

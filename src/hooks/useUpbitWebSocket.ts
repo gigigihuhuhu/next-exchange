@@ -20,7 +20,7 @@ export const useUpbitWebSocket = (
   onmsgHandler: (event: MessageEvent) => void,
   deps: DependencyList | undefined
 ) => {
-  const [isLoading, setIsLoading] = useState(true); // Loading 상태 추가
+  const [isLoading, setIsLoading] = useState(false); // Loading 상태 추가
 
   useEffect(() => {
     const connect = (
@@ -36,7 +36,7 @@ export const useUpbitWebSocket = (
         setIsLoading(true);
         setTimeout(() => {
           console.debug("Retrying WebSocket connection...");
-          connect(url, upbitWsReqForm, onmsgHandler); // 1초 후 재연결
+          connect(url, upbitWsReqForm, onmsgHandler); // 2초 후 재연결
         }, 2000);
       };
       socket.onclose = () => {
