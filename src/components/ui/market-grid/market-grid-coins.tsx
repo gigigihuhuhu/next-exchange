@@ -13,7 +13,7 @@ import {
 } from "@/utils/currency";
 import { useCoinData } from "@/context/coin-data-context";
 import Hangul from "hangul-js";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Loading from "@/app/loading";
 
 export default function MarketGridCoins({
@@ -25,6 +25,7 @@ export default function MarketGridCoins({
   currencyTypeCode: string;
   searchKeyword: string;
 }) {
+  const [isEmpty, setIsEmpty] = useState(false);
   const { coins, BTCtoKRW, isLoading } = useCoinData();
   const currMarket = useSearchParams().get("market");
 
@@ -35,8 +36,10 @@ export default function MarketGridCoins({
     return allMarkets.findMarketByCurrencyType(currencyTypeCode);
   }, [currencyTypeCode, allMarkets]);
 
+  
   const isDisplay = useMemo(() => {
-    return displayMarkets.reduce((acc, market) => {
+    let isEmpty = true;
+    const res = displayMarkets.reduce((acc, market) => {
       const searchInitials = Hangul.disassemble(searchKeyword).join("");
       const koreanNames = Hangul.disassemble(market.korean_name).join("");
       const regex = new RegExp(searchKeyword.split("").join(".*"), "i");
@@ -46,8 +49,11 @@ export default function MarketGridCoins({
         regex.test(market.english_name);
 
       acc[market.market] = isMatch;
+      if (isMatch) isEmpty = false;
       return acc;
     }, {} as { [market: string]: boolean });
+    setIsEmpty(isEmpty);
+    return res;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchKeyword]);
 
@@ -59,6 +65,15 @@ export default function MarketGridCoins({
       </div>
     );
   }
+
+  if(searchKeyword !== "" && isEmpty){
+    return (
+      <div className="w-full h-full flex flex-col justify-center items-center gap-2 mt-40">
+        <h2 className="text-gray-500 text-xs">{`${currencyTypeCode} 마켓에서는 검색된 코인이 없습니다.`}</h2>
+      </div>
+    );
+  }
+
   return (
     <>
       {displayMarkets.map((market: Market, index) => {
