@@ -6,9 +6,9 @@ export interface MarketDTO {
 
 export class Market {
   constructor(
-    public market: string, 
-    public korean_name: string, 
-    public english_name: string) {}
+    public market: string = "", 
+    public korean_name: string = "", 
+    public english_name: string = "",) {}
 
   static fromDTO(data: MarketDTO) {
     return new Market(data.market,data.korean_name,data.english_name);

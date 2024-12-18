@@ -14,9 +14,7 @@ import Loading from "@/app/loading";
 const CoinInfo = ({ market }: { market: string }) => {
   const { coinByMarket, isLoading } = useCoinData();
   const [activeTab, setActiveTab] = useState<number>(0);
-  const [marketInstance, setMarketInstance] = useState<Market>(
-    Market.getDefaultMarket()
-  );
+  const [marketInstance, setMarketInstance] = useState<Market>(new Market());
 
   useEffect(() => {
     const parsedMarket = Market.fromObject(JSON.parse(market));
