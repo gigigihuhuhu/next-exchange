@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setToken(keycloak.token || "");
         setUser({
           name:
-            keycloak.idTokenParsed?.name ||
+            keycloak.idTokenParsed?.given_name ||
             keycloak.idTokenParsed?.preferred_username,
           email: keycloak.idTokenParsed?.email,
         });

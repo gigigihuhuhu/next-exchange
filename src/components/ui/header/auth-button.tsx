@@ -12,7 +12,7 @@ export default function AuthButton() {
   if (authenticated) {
     return (
       <div className="w-[250px] flex flex-row justify-end gap-4 text-sm text-white font-bold">
-        <p>{`${user?.name} 님 안녕하세요!`}</p>
+        <p>{t("welcome", { name: user?.name })}</p>
         <button onClick={() => keycloak.logout()}>{t("logout")}</button>
       </div>
     );
