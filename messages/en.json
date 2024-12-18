@@ -1,0 +1,12 @@
+{
+  "Header": {
+    "exchange": "Exchange",
+    "balances": "Wallet",
+    "investments": "My Trade"
+  },
+  "Auth": {
+    "login": "Sign in",
+    "logout": "Sign out",
+    "register": "Sign up"
+  }
+}

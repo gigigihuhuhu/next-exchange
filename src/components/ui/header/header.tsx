@@ -2,9 +2,13 @@ import { Logo } from "@/components/icons";
 import Link from "next/link";
 import NavLink from "@/components/ui/header/nav-link";
 import AuthButton from "@/components/ui/header/auth-button";
+import { useTranslations } from "next-intl";
+import LocaleButtons from "./locale-buttons";
 
 export default function Header() {
+  const t = useTranslations("Header");
   const defaultMarket = "KRW-BTC";
+
   return (
     <header className="min-w-[1324px] fixed flex items-center z-10 w-full bg-blue-900 h-12 py-8 justify-between px-10">
       <Link className="grow-0" href="/">
@@ -14,13 +18,14 @@ export default function Header() {
         <NavLink
           href={{ pathname: "/exchange", query: { market: defaultMarket } }}
         >
-          거래소
+          {t("exchange")}
         </NavLink>
-        <NavLink href="/balances">입출금</NavLink>
-        <NavLink href="/investments">투자내역</NavLink>
+        <NavLink href="/balances">{t("balances")}</NavLink>
+        <NavLink href="/investments">{t("investments")}</NavLink>
       </div>
-      <div className="grow flex flex-row gap-5 items-center justify-end text-sm text-white font-bold">
+      <div className="grow flex flex-row gap-6 items-center justify-end">
         <AuthButton></AuthButton>
+        <LocaleButtons></LocaleButtons>
       </div>
     </header>
   );
