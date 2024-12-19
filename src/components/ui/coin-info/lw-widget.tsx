@@ -1,8 +1,10 @@
 "use client";
 import { Market } from "@/model/market";
+import { useLocale } from "next-intl";
 import React, { useEffect, useRef, memo } from "react";
 
 function TradingViewWidget({ market }: { market: string }) {
+  const locale = useLocale();
   const container = useRef<HTMLDivElement>(null);
 
   const parsedMarket = Market.fromObject(JSON.parse(market));
@@ -23,7 +25,7 @@ function TradingViewWidget({ market }: { market: string }) {
           "timezone": "Asia/Seoul",
           "theme": "light",
           "style": "1",
-          "locale": "kr",
+          "locale": "${locale === "ko" ? 'kr' : 'en'}",
           "withdateranges": true,
           "range": "YTD",
           "hide_side_toolbar": false,

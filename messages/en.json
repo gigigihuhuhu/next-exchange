@@ -9,5 +9,52 @@
     "logout": "Sign out",
     "register": "Sign up",
     "welcome": "Hello {name}!"
+  },
+  "Notice": {
+    "notice": "Notice"
+  },
+  "Search": {
+    "placeholder": "Search"
+  },
+  "MarketGrid": {
+    "KRW": "KRW",
+    "BTC": "BTC",
+    "USDT": "USDT",
+    "name": "Name(English)",
+    "price": "Price",
+    "change": "Change(1D)",
+    "volume": "Vol",
+    "million": "M"
+  },
+  "CoinInfo": {
+    "price": "Price",
+    "info": "Info",
+    "high": "High",
+    "low": "Low",
+    "volume24h": "Volume(24h)",
+    "volumeAmount24h": "Volume(24h)"
+  },
+  "Footer": {
+    "guide": "Guide",
+    "aboutUs": "About Us",
+    "notices": "Notices",
+    "tradeGuide": "Trade Guide",
+    "depositeAndWithdrawGuide": "Deposite & Withdraw Guide",
+    "termsAndPolicies": "Terms and Policies",
+    "terms": "Terms of Use",
+    "openAPITerms": "Open API Terms of Use",
+    "privacy": "Privacy Policy",
+    "youthProtection": "Youth Protection Policy",
+    "support": "Support",
+    "faq": "FAQ",
+    "inquiries": "1:1 Inquiries",
+    "kakaoInquiries": "Kakao Inquiries",
+    "openAPI": "Open API",
+    "marketSupportInquiries": "Market Support Inquiries",
+    "phishingSiteReport": "Phishing Site Report",
+    "relatedServices": "Related Services",
+    "privacyCenter": "Privacy Center",
+    "careCenter": "Upbit Care Center",
+    "bugBountyProgram": "Bug Bounty Program"
   }
 }

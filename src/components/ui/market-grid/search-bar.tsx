@@ -1,6 +1,7 @@
 import React, { useCallback, useRef } from "react";
 import Image from "next/image";
 import { SettingsIcon, XIcon } from "@/components/icons";
+import { useTranslations } from "next-intl";
 
 export default function SearchBar({
   setSearchKeyword,
@@ -8,6 +9,8 @@ export default function SearchBar({
   setSearchKeyword: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const t = useTranslations("Search");
 
   const handleClearInput = useCallback(() => {
     if (inputRef.current) {
@@ -26,7 +29,7 @@ export default function SearchBar({
             className="w-full placeholder-gray-500 placeholder:text-xs rounded-sm focus:placeholder-transparent"
             type="text"
             onChange={(e) => setSearchKeyword(e.target.value)}
-            placeholder="코인명/심볼검색"
+            placeholder={t("placeholder")}
           />
           <button onClick={handleClearInput}
             className={

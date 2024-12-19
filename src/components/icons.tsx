@@ -95,7 +95,7 @@ export function XIcon() {
   );
 }
 
-export function NoticeIcon() {
+export function NoticeIcon({label}:{label: string}) {
   return (
     <div className="flex flex-row items-center text-blue-800 gap-2">
       <svg
@@ -118,7 +118,7 @@ export function NoticeIcon() {
           </clipPath>
         </defs>
       </svg>
-      <p>공지</p>
+      <p>{label}</p>
     </div>
   );
 }

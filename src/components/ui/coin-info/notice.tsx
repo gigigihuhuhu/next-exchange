@@ -2,6 +2,7 @@
 
 import { XIcon, NoticeIcon } from "@/components/icons";
 import { noticeText } from "@/data/sample-data";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 interface NoticeProps {
@@ -10,6 +11,7 @@ interface NoticeProps {
 const Notice = ({ className }: NoticeProps) => {
   const [disableNotice, setDisableNotice] = useState<boolean>(false);
   const [notice, setNotice] = useState<string>("");
+  const t = useTranslations("Notice");
 
   useEffect(() => {
     setNotice(noticeText);
@@ -24,7 +26,7 @@ const Notice = ({ className }: NoticeProps) => {
     >
       <div className="py-1 px-4 font-bold flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-2">
-          <NoticeIcon></NoticeIcon>
+          <NoticeIcon label={t("notice")}></NoticeIcon>
           <p>{notice}</p>
         </div>
         <button onClick={() => setDisableNotice(true)}>

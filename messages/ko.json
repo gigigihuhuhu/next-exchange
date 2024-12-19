@@ -9,5 +9,52 @@
     "logout": "로그아웃",
     "register": "회원가입",
     "welcome": "{name}님 안녕하세요!"
+  },
+  "Notice": {
+    "notice": "공지"
+  },
+  "Search": {
+    "placeholder": "코인명/심볼검색"
+  },
+  "MarketGrid": {
+    "KRW": "원화",
+    "BTC": "BTC",
+    "USDT": "USDT",
+    "name": "한글명",
+    "price": "현재가",
+    "change": "전일대비",
+    "volume": "거래대금",
+    "million": "백만"
+  },
+  "CoinInfo": {
+    "price": "시세",
+    "info": "정보",
+    "high": "고가",
+    "low": "저가",
+    "volume24h": "거래량(24h)",
+    "volumeAmount24h": "거래대금(24h)"
+  },
+  "Footer": {
+    "guide": "안내",
+    "aboutUs": "회사소개",
+    "notices": "공지사항",
+    "tradeGuide": "거래 이용 안내",
+    "depositeAndWithdrawGuide": "입출금 이용 안내",
+    "termsAndPolicies": "약관 및 정책",
+    "terms": "업비트 이용약관",
+    "openAPITerms": "Open API 이용약관",
+    "privacy": "개인정보처리방침",
+    "youthProtection": "청소년보호정책",
+    "support": "고객지원",
+    "faq": "자주하는 질문",
+    "inquiries": "1:1 문의하기",
+    "kakaoInquiries": "카카오톡 상담하기",
+    "openAPI": "Open API",
+    "marketSupportInquiries": "거래지원 문의 및 제보",
+    "phishingSiteReport": "피싱 사이트 신고",
+    "relatedServices": "연관 서비스",
+    "privacyCenter": "프라이버시센터",
+    "careCenter": "투자자보호센터",
+    "bugBountyProgram": "버그 바운티 프로그램"
   }
 }

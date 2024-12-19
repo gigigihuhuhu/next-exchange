@@ -10,11 +10,16 @@ import { getDisplayAccTradePrice, getDisplayPrice } from "@/utils/currency";
 import Links from "@/components/ui/links/links";
 import { useCoinData } from "@/context/coin-data-context";
 import Loading from "@/app/loading";
+import { useLocale, useTranslations } from "use-intl";
 
 const CoinInfo = ({ market }: { market: string }) => {
   const { coinByMarket, isLoading } = useCoinData();
   const [activeTab, setActiveTab] = useState<number>(0);
   const [marketInstance, setMarketInstance] = useState<Market>(new Market());
+
+  const t = useTranslations("CoinInfo");
+
+  const locale = useLocale();
 
   useEffect(() => {
     const parsedMarket = Market.fromObject(JSON.parse(market));
@@ -49,7 +54,11 @@ const CoinInfo = ({ market }: { market: string }) => {
             blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mPsqQcAAZ0BDTSBuAQAAAAASUVORK5CYII="
             priority
           ></Image>
-          <h2 className="ml-2 text-xl font-bold">{`${marketInstance.korean_name}`}</h2>
+          <h2 className="ml-2 text-xl font-bold">{`${
+            locale === "ko"
+              ? marketInstance.korean_name
+              : marketInstance.english_name
+          }`}</h2>
           <h3 className="ml-1 text-xs text-gray-500 font-medium">{`${coin.coinCode()}/${coin.currencyType()}`}</h3>
         </div>
 
@@ -62,7 +71,7 @@ const CoinInfo = ({ market }: { market: string }) => {
             }
             onClick={() => setActiveTab(0)}
           >
-            시세
+            {t("price")}
           </button>
           <button
             className={
@@ -72,7 +81,7 @@ const CoinInfo = ({ market }: { market: string }) => {
             }
             onClick={() => setActiveTab(1)}
           >
-            정보
+            {t("info")}
           </button>
         </div>
 
@@ -123,14 +132,14 @@ const CoinInfo = ({ market }: { market: string }) => {
             </div>
             <div className="flex flex-col *:flex *:flex-row *:justify-between *:items-center font-medium">
               <div className="">
-                <h3 className="text-xs text-gray-700">고가</h3>
+                <h3 className="text-xs text-gray-700">{t("high")}</h3>
                 <h3 className="font-semibold text-sm text-red-600">
                   {getDisplayPrice(coin.high_price, coin.currencyType())}
                 </h3>
               </div>
               <hr className="my-2" />
               <div>
-                <h3 className="text-xs text-gray-700">저가</h3>
+                <h3 className="text-xs text-gray-700">{t("low")}</h3>
                 <h3 className="font-semibold text-sm text-green-700">
                   {getDisplayPrice(coin.low_price, coin.currencyType())}
                 </h3>
@@ -139,7 +148,7 @@ const CoinInfo = ({ market }: { market: string }) => {
 
             <div className="flex flex-col *:flex *:flex-row *:justify-between *:items-center">
               <div className="font-medium">
-                <h3 className="text-xs text-gray-700">거래량(24h)</h3>
+                <h3 className="text-xs text-gray-700">{t("volume24h")}</h3>
                 <div className="flex flex-row gap-1 items-center">
                   <h3 className="text-sm">
                     {coin.acc_trade_volume_24h.toLocaleString()}
@@ -150,7 +159,7 @@ const CoinInfo = ({ market }: { market: string }) => {
               <hr className="my-2" />
               <div>
                 <h3 className="font-medium text-xs text-gray-700">
-                  거래대금(24h)
+                  {t("volumeAmount24h")}
                 </h3>
                 <div className="text-[0.7rem] flex flex-row gap-1 items-center">
                   <h3>

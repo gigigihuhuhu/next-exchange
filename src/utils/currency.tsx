@@ -36,7 +36,8 @@ export const getDisplayAccTradePrice = (
 export const getDisplayAccTradePriceByKRW = (
   price: number,
   currencyTypeCode: string,
-  BTCtoKRW: number
+  BTCtoKRW: number,
+  unit: string
 ) => {
   switch (currencyTypeCode) {
     case "KRW":
@@ -54,7 +55,7 @@ export const getDisplayAccTradePriceByKRW = (
     return (
       <>
         <h4>{makeCommadNumber((price / 1000000).toFixed(0))}</h4>
-        <h4 className="text-gray-500">백만</h4>
+        <h4 className="text-gray-500">{unit}</h4>
       </>
     );
   } else {

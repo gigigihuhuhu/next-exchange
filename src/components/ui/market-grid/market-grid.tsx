@@ -3,15 +3,16 @@
 import { useState } from "react";
 import MarketGridCoins from "./market-grid-coins";
 import SearchBar from "./search-bar";
+import { useTranslations } from "next-intl";
 
 export default function MarketGrid({ markets }: { markets: string }) {
   const [activeCurrencyIdx, setActiveCurrencyIdx] = useState(0);
   const [searchKeyword, setSearchKeyword] = useState("");
-
+  const t = useTranslations("MarketGrid");
   const currencyTypes = [
-    { codeName: "KRW", koreanName: "원화", englishName: "KRW" },
-    { codeName: "BTC", koreanName: "BTC", englishName: "BTC" },
-    { codeName: "USDT", koreanName: "USDT", englishName: "USDT" },
+    { code: "KRW"},
+    { code: "BTC"},
+    { code: "USDT"},
   ];
 
   return (
@@ -31,30 +32,27 @@ export default function MarketGrid({ markets }: { markets: string }) {
                 }
                 onClick={() => setActiveCurrencyIdx(index)}
               >
-                {currencyType.koreanName}
+                {t(currencyType.code)}
               </button>
             );
           })}
         </div>
         <div
           className={
-            "flex flex-row items-center px-3 border-t h-[30px] w-full bg-gray-50 text-[0.72rem] font-medium"
+            "flex flex-row items-center border-t h-[30px] w-full bg-gray-50 text-[0.72rem] font-medium"
           }
         >
-          <div className="basis-[30px]">
-            <h4 className="text-gray-500"></h4>
+          <div className="basis-[146px] text-center">
+            <h4 className="text-gray-500">{t("name")}</h4>
           </div>
-          <div className="basis-[98px] text-left">
-            <h4 className="text-gray-500">한글명</h4>
+          <div className="basis-[88px] text-center">
+            <h4 className="text-gray-500">{t("price")}</h4>
           </div>
-          <div className="basis-[94px] text-center">
-            <h4 className="text-gray-500">현재가</h4>
+          <div className="basis-[78px] text-center">
+            <h4 className="text-gray-500">{t("change")}</h4>
           </div>
-          <div className="basis-[58px] text-center">
-            <h4 className="text-gray-500">전일대비</h4>
-          </div>
-          <div className="basis-[98px] text-right">
-            <h4 className="text-gray-500">거래대금</h4>
+          <div className="basis-[88px] text-center">
+            <h4 className="text-gray-500">{t("volume")}</h4>
           </div>
         </div>
       </div>
@@ -69,7 +67,7 @@ export default function MarketGrid({ markets }: { markets: string }) {
             >
               <MarketGridCoins
                 markets={markets}
-                currencyTypeCode={currencyType.codeName}
+                currencyTypeCode={currencyType.code}
                 searchKeyword={searchKeyword}
               ></MarketGridCoins>
             </div>

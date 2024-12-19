@@ -15,6 +15,7 @@ import { useCoinData } from "@/context/coin-data-context";
 import Hangul from "hangul-js";
 import { useMemo, useState } from "react";
 import Loading from "@/app/loading";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function MarketGridCoins({
   markets,
@@ -28,6 +29,8 @@ export default function MarketGridCoins({
   const [isEmpty, setIsEmpty] = useState(false);
   const { coins, BTCtoKRW, isLoading } = useCoinData();
   const currMarket = useSearchParams().get("market");
+  const t = useTranslations("MarketGrid");
+  const locale = useLocale();
 
   const allMarkets = useMemo(() => {
     return Markets.fromObject(JSON.parse(markets).markets);
@@ -36,7 +39,6 @@ export default function MarketGridCoins({
     return allMarkets.findMarketByCurrencyType(currencyTypeCode);
   }, [currencyTypeCode, allMarkets]);
 
-  
   const isDisplay = useMemo(() => {
     let isEmpty = true;
     const res = displayMarkets.reduce((acc, market) => {
@@ -54,19 +56,23 @@ export default function MarketGridCoins({
     }, {} as { [market: string]: boolean });
     setIsEmpty(isEmpty);
     return res;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchKeyword]);
 
   if (!coins || isLoading) {
     return (
       <div className="w-full h-full flex flex-col justify-center items-center gap-2 mt-40">
         <Loading></Loading>
-        {isLoading && <div className="text-gray-500 text-sm">업비트 Open API 정책으로 인한 대기중...(rate limit : 10sec)</div>}
+        {isLoading && (
+          <div className="text-gray-500 text-sm">
+            업비트 Open API 정책으로 인한 대기중...(rate limit : 10sec)
+          </div>
+        )}
       </div>
     );
   }
 
-  if(searchKeyword !== "" && isEmpty){
+  if (searchKeyword !== "" && isEmpty) {
     return (
       <div className="w-full h-full flex flex-col justify-center items-center gap-2 mt-40">
         <h2 className="text-gray-500 text-xs">{`${currencyTypeCode} 마켓에서는 검색된 코인이 없습니다.`}</h2>
@@ -107,7 +113,7 @@ export default function MarketGridCoins({
               </div>
               <div className="text-left basis-[98px]">
                 <h3 className="text-[0.75rem] leading-[0.9rem] font-semibold">
-                  {market.korean_name}
+                  {locale === "ko" ? market.korean_name : market.english_name}
                 </h3>
                 <h3 className="text-[0.65rem] leading-[0.9rem] text-gray-500">
                   {market.market}
@@ -150,7 +156,8 @@ export default function MarketGridCoins({
                   {getDisplayAccTradePriceByKRW(
                     coin.acc_trade_price_24h,
                     currencyTypeCode,
-                    BTCtoKRW
+                    BTCtoKRW,
+                    t("million")
                   )}
                 </div>
               </div>
