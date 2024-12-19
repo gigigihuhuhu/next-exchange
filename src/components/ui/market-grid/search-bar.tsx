@@ -18,6 +18,7 @@ export default function SearchBar({
       setSearchKeyword(""); // 상태 초기화
       inputRef.current.blur(); // focus 해제
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

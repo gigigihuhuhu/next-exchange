@@ -45,6 +45,7 @@ export default function MarketGridTradePrice({
       setPrice(coinTradePrice);
       return getDisplayPrice(coinTradePrice, currencyTypeCode);
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coinTradePrice]);
 
   return (

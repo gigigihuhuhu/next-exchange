@@ -8,10 +8,11 @@ function Minichart({ market }: { market: string }) {
   const parsedMarket = Market.fromObject(JSON.parse(market));
 
   useEffect(() => {
-    if (container.current?.querySelector("script")) return;
+    const containerRef = container.current;
+    if (containerRef?.querySelector("script")) return;
 
-    if (container.current) {
-      container.current.innerHTML = "";
+    if (containerRef) {
+      containerRef.innerHTML = "";
     }
 
     const script = document.createElement("script");
@@ -33,11 +34,11 @@ function Minichart({ market }: { market: string }) {
         "chartOnly": true,
         "noTimeScale": true
       }`;
-    container.current?.appendChild(script);
+      containerRef?.appendChild(script);
 
     return () => {
-      if (container.current) {
-        container.current.innerHTML = "";
+      if (containerRef) {
+        containerRef.innerHTML = "";
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
