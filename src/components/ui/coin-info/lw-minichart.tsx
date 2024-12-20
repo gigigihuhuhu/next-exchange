@@ -8,11 +8,10 @@ function Minichart({ market }: { market: string }) {
   const parsedMarket = Market.fromObject(JSON.parse(market));
 
   useEffect(() => {
-    const containerRef = container.current;
-    if (containerRef?.querySelector("script")) return;
+    if (container.current?.querySelector("script")) return;
 
-    if (containerRef) {
-      containerRef.innerHTML = "";
+    if (container.current) {
+      container.current.innerHTML = "";
     }
 
     const script = document.createElement("script");
@@ -34,11 +33,12 @@ function Minichart({ market }: { market: string }) {
         "chartOnly": true,
         "noTimeScale": true
       }`;
-      containerRef?.appendChild(script);
+      container.current?.appendChild(script);
 
     return () => {
-      if (containerRef) {
-        containerRef.innerHTML = "";
+      if (container.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        container.current.innerHTML = "";
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
