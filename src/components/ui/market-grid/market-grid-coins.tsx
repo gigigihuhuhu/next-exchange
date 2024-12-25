@@ -21,10 +21,12 @@ export default function MarketGridCoins({
   markets,
   currencyTypeCode,
   searchKeyword,
+  sortBy = "acc_trade_price_24h",
 }: {
   markets: string;
   currencyTypeCode: string;
   searchKeyword: string;
+  sortBy?: string;
 }) {
   const [isEmpty, setIsEmpty] = useState(false);
   const { coins, BTCtoKRW, isLoading } = useCoinData();
@@ -37,7 +39,18 @@ export default function MarketGridCoins({
   }, [markets]);
   const displayMarkets = useMemo(() => {
     return allMarkets.findMarketByCurrencyType(currencyTypeCode);
-  }, [currencyTypeCode, allMarkets]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allMarkets]);
+
+  const sortedDisplayMarkets = useMemo(() => {
+    return displayMarkets
+    .sort(
+      (a, b) =>
+        (coins?.[b.market]?.[sortBy] as number) -
+        (coins?.[a.market]?.[sortBy] as number)
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [displayMarkets, coins]);
 
   const isDisplay = useMemo(() => {
     let isEmpty = true;
@@ -82,7 +95,7 @@ export default function MarketGridCoins({
 
   return (
     <>
-      {displayMarkets.map((market: Market, index) => {
+      {sortedDisplayMarkets.map((market: Market, index) => {
         const coin = coins ? coins[market.market] : new Coin();
         if (!coin) return null;
         return (
@@ -98,7 +111,7 @@ export default function MarketGridCoins({
                 <div>
                   <FavoriteIcon></FavoriteIcon>
                 </div>
-                <div className="pr-1">
+                <div className="pr-1 w-4 text-center">
                   {coin.change == "FALL" ? (
                     <p className="text-green-700 text-xs">▼</p>
                   ) : (
@@ -109,10 +122,11 @@ export default function MarketGridCoins({
                   ) : (
                     ""
                   )}
+                  {coin.change == "EVEN" ? <p className="text-xs">-</p> : ""}
                 </div>
               </div>
               <div className="text-left basis-[98px]">
-                <h3 className="text-[0.75rem] leading-[0.9rem] font-semibold">
+                <h3 className="text-xs leading-[0.9rem] font-semibold">
                   {locale === "ko" ? market.korean_name : market.english_name}
                 </h3>
                 <h3 className="text-[0.65rem] leading-[0.9rem] text-gray-500">

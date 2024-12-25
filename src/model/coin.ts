@@ -63,6 +63,8 @@ interface CoinWsDTO {
   stream_type: string;
 }
 export class Coin {
+  [key: string]: string | number | (() => string);
+
   constructor(
     public market: string = '-',
     public high_price: number = 0,
