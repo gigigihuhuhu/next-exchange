@@ -1,3 +1,5 @@
+import { markets as sampleMarkets } from "@/data/sample-data";
+
 export interface MarketDTO {
   market: string;
   korean_name: string;
@@ -52,5 +54,10 @@ export class Markets {
 
   getMarketCodes(){
     return this.markets.map((a) => a.market);
+  }
+
+  getServicedMarkets() {
+    this.markets = this.markets.filter((market:Market) => sampleMarkets.includes(market.market));
+    return this
   }
 }

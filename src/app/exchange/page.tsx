@@ -25,8 +25,7 @@ export default async function Exchange({
   const marketParam: string | undefined = (
     await searchParams
   )?.market?.toString();
-  const allMarkets = Markets.fromDTO(await fetchMarkets());
-
+  const allMarkets = Markets.fromDTO(await fetchMarkets()).getServicedMarkets();
   const coinInfoMarket =
     allMarkets.findMarket(marketParam ?? Market.getDefaultMarket().market) ??
     Market.getDefaultMarket();

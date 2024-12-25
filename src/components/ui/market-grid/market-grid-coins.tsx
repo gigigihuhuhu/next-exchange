@@ -43,14 +43,14 @@ export default function MarketGridCoins({
   }, [allMarkets]);
 
   const sortedDisplayMarkets = useMemo(() => {
-    return displayMarkets
-    .sort(
+    if (!coins) return displayMarkets;
+    return displayMarkets.sort(
       (a, b) =>
         (coins?.[b.market]?.[sortBy] as number) -
         (coins?.[a.market]?.[sortBy] as number)
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [displayMarkets, coins]);
+  }, [displayMarkets, coins, sortBy]);
 
   const isDisplay = useMemo(() => {
     let isEmpty = true;
