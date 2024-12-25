@@ -467,4 +467,7 @@ export const markets = [
   "KRW-ME",
   "BTC-ME",
   "USDT-ME",
+  "KRW-MOCA",
+  "BTC-MOCA",
+  "USDT-MOCA",
 ];
