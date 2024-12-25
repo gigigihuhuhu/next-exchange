@@ -20,7 +20,7 @@ export const getDisplayAccTradePrice = (
 ) => {
   switch (currencyTypeCode) {
     case "KRW":
-      return makeCommadNumber(price.toString());
+      return makeCommadNumber(price.toFixed(0).toString());
     case "BTC":
       return price.toLocaleString("ko-KR", {
         minimumFractionDigits: 3,
