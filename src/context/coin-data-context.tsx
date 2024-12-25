@@ -3,7 +3,14 @@
 import { v4 as uuidv4 } from "uuid";
 import { UpbitWsReqForm, useUpbitWebSocket } from "@/hooks/useUpbitWebSocket";
 import { Coin } from "@/model/coin";
-import { createContext, useContext, useState, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 import { markets } from "@/data/sample-data";
 
 interface coinDataContextProps {
@@ -31,14 +38,14 @@ export const CoinDataProvider = ({
       codes: markets,
     },
   ]);
+  const queueRef = useRef<Coin[]>([]);
 
   const onmsgHandler = useCallback((event: MessageEvent) => {
     try {
       event.data.text().then((data: string) => {
         const newCoin = Coin.fromWsDTO(JSON.parse(data));
-        setCoins((prevCoins) => {
-          return { ...prevCoins, [newCoin.market]: newCoin };
-        });
+
+        queueRef.current.push(newCoin);
 
         if (newCoin.market === "KRW-BTC") {
           setBTCtoKRW(newCoin.trade_price);
@@ -56,6 +63,24 @@ export const CoinDataProvider = ({
     []
   );
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (queueRef.current.length > 0) {
+        const newCoins: Coin[] = queueRef.current;
+        queueRef.current = [];
+        setCoins((prevCoins) => {
+          const updatedCoins = { ...prevCoins };
+          newCoins.forEach((newCoin) => {
+            updatedCoins[newCoin.market] = newCoin;
+          });
+          return updatedCoins;
+        });
+      }
+    }, 200);
+
+    return () => clearInterval(intervalId); // 컴포넌트가 언마운트되면 interval 정리
+  }, []);
+
   const coinByMarket = (market: string) => {
     return coins ? coins[market] : undefined;
   };
@@ -66,7 +91,7 @@ export const CoinDataProvider = ({
         coins,
         BTCtoKRW,
         coinByMarket,
-        isLoading
+        isLoading,
       }}
     >
       {children}
